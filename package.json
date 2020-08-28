@@ -1,0 +1,12 @@
+{
+  "name": "app-builder-cypress",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "cypress": "^5.0.0"
+  },
+  "scripts": {
+    "cypress:open": "./node_modules/.bin/cypress open",
+    "cypress:run": "./node_modules/.bin/cypress run"
+  }
+}
