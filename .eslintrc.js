@@ -2,11 +2,12 @@ module.exports = {
   env: {
     browser: true,
     commonjs: true,
-    es6: true,
-    'cypress/globals': true
+    'cypress/globals': true,
+    es6: true
   },
   extends: [
     'standard',
+    'prettier/standard',
     'plugin:cypress/recommended'
   ],
   globals: {
@@ -17,13 +18,20 @@ module.exports = {
     ecmaVersion: 2018
   },
   plugins: [
-    'cypress'
+    'cypress',
+    'simple-import-sort',
+    'sort-destructure-keys',
+    'sort-keys-fix'
   ],
   rules: {
-    'cypress/no-assigning-return-values': 'error',
-    'cypress/no-unnecessary-waiting': 'error',
     'cypress/assertion-before-screenshot': 'warn',
+    'cypress/no-assigning-return-values': 'error',
+    'cypress/no-async-tests': 'error',
     'cypress/no-force': 'warn',
-    'cypress/no-async-tests': 'error'
+    'cypress/no-unnecessary-waiting': 'error',
+    'max-len': ['error', { code: 120 }],
+    'simple-import-sort/sort': 'error',
+    'sort-destructure-keys/sort-destructure-keys': [2, { caseSensitive: false }],
+    'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false, minKeys: 2 }]
   }
 }

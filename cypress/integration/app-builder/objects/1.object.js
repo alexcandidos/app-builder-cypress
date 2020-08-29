@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 const TestBase = require('../../test.base')
-const FormView = require('../../app-builder/form-view/1.form-view.spec')
+const FormView = require('../form-view/1.form-view')
 const signIn = require('../../portal/sign-in')
 
 class AppBuilderObject extends TestBase {
@@ -38,12 +38,12 @@ class AppBuilderObject extends TestBase {
   }
 
   test () {
-    // signIn.test()
+    signIn.test()
 
     describe('Object', () => {
       const formView = new FormView({
-        objectName: this.objectName,
-        newObject: true
+        newObject: true,
+        objectName: this.objectName
       })
 
       beforeEach(() => {
@@ -68,6 +68,5 @@ class AppBuilderObject extends TestBase {
     })
   }
 }
-module.exports = new AppBuilderObject()
 
-new AppBuilderObject().test()
+module.exports = new AppBuilderObject()

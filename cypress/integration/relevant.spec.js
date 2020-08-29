@@ -1,6 +1,6 @@
 const constants = require('./helpers/constants')
 const SignIn = require('./portal/sign-in')
-const AppBuilderObject = require('./app-builder/objects/1.object.spec')
+const AppBuilderObject = require('./app-builder/objects/1.object')
 
 class Relevant {
   constructor () {

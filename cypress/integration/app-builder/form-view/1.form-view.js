@@ -1,4 +1,5 @@
 const TestBase = require('../../test.base')
+const { ddmInline } = require('../../helpers/selectors')
 
 class FormView extends TestBase {
   constructor (config = {
@@ -19,96 +20,130 @@ class FormView extends TestBase {
   _fieldCompose (field) {
     const {
       config: {
-        label,
-        placeholder,
-        help,
         displayType,
-        required,
+        help,
+        inline,
+        label,
+        multiple,
+        placeholder,
         predefinedValue,
-        showLabel,
         repeatable,
-        multiple
-      } = {}
+        required,
+        showAsSwitcher,
+        showLabel = true,
+        tooltip
+      } = {},
+      name: fieldName
     } = field
 
-    const { ddmDisplayStyle, ddmLabel, ddmPlaceholder, ddmRequired, ddmTip, ddmPredefinedValue, ddmRepeatable, ddmShowLabel = true, ddmMultiple } = this.selectors
+    const {
+      ddmDisplayStyle,
+      ddmInline,
+      ddmLabel,
+      ddmMultiple,
+      ddmPlaceholder,
+      ddmPredefinedValue,
+      ddmRepeatable,
+      ddmRequired,
+      ddmShowAsSwitcher,
+      ddmShowLabel,
+      ddmTip,
+      ddmTooltip
+    } = this.selectors
 
-    const withAdvancedField = predefinedValue || showLabel || repeatable
+    const withAdvancedField = predefinedValue || showLabel || repeatable || inline
 
     const changeTab = (index) => {
-      cy.get('.component-tbar.ddm-form-tabs.tbar li').eq(index).click()
+      it('Changing tab', () => {
+        cy.get('.component-tbar.ddm-form-tabs.tbar li').eq(index).click()
+      })
     }
 
-    const setInputValue = (selector, value) => {
-      cy.get(`${selector} input`)
-        .should('not.have.value')
-        .type(value)
-        .should('have.value', value)
+    const setInputValue = (selector, value, id) => {
+      it(`Typing [${value}] on [${id}]`, () => {
+        cy.get(`${selector} input`)
+          .should('not.have.value')
+          .type(value)
+          .should('have.value', value)
+      })
     }
 
-    const setChecked = (selector) => {
-      cy.get(`${selector} input`)
-        .should('not.be.checked')
-        .check()
-        .should('be.checked')
-    }
-
-    const setUnchecked = (selector) => {
-      cy.get(`${selector} input`)
-        .should('be.checked')
-        .uncheck()
-        .should('not.be.checked')
-    }
-
-    if (label) {
-      cy.get(`${ddmLabel} input`)
-        .should('have.value', field.name)
-        .clear()
-        .type(label)
-        .should('have.value', label)
-    }
-
-    if (placeholder) {
-      setInputValue(ddmPlaceholder, placeholder)
-    }
-
-    if (help) {
-      setInputValue(ddmTip, help)
-    }
-
-    if (displayType === 'multiple') {
-      cy.get(`${ddmDisplayStyle}`).within(() => {
-        cy.get('input')
-          .eq(1)
+    const setChecked = (selector, id) => {
+      it(`Mark [${id}] as [checked]`, () => {
+        cy.get(`${selector} input`)
           .should('not.be.checked')
-          .click()
+          .check()
           .should('be.checked')
       })
     }
 
+    const setUnchecked = (selector, id) => {
+      it(`Mark [${id}] as [unchecked]`, () => {
+        cy.get(`${selector} input`)
+          .should('be.checked')
+          .uncheck()
+          .should('not.be.checked')
+      })
+    }
+
+    if (label) {
+      it(`Typing [${label}] on [Label]`, () => {
+        cy.get(`${ddmLabel} input`)
+          .should('have.value', field.name)
+          .clear()
+          .type(label)
+          .should('have.value', label)
+      })
+    }
+
+    if (placeholder) {
+      setInputValue(ddmPlaceholder, placeholder, 'placeholder')
+    }
+
+    if (help) {
+      setInputValue(ddmTip, help, 'help')
+    }
+
+    if (displayType === 'multiple') {
+      it('Marking [multiple] as [checked]', () => {
+        cy.get(`${ddmDisplayStyle}`).within(() => {
+          cy.get('input')
+            .eq(1)
+            .should('not.be.checked')
+            .click()
+            .should('be.checked')
+        })
+      })
+    }
+
     if (required) {
-      cy.get(`${ddmRequired} input`)
-        .should('not.be.checked')
-        .check()
-        .should('be.checked')
+      setChecked(ddmRequired, 'required')
+    }
+
+    if (showAsSwitcher) {
+      setChecked(ddmShowAsSwitcher, 'showAsSwitcher')
     }
 
     if (withAdvancedField) {
       changeTab(1)
       if (predefinedValue) {
-        setInputValue(ddmPredefinedValue, predefinedValue)
+        setInputValue(ddmPredefinedValue, predefinedValue, 'predefinedValue')
       }
 
       if (repeatable) {
-        setChecked(ddmRepeatable)
+        setChecked(ddmRepeatable, 'repeatable')
       }
 
       if (!showLabel) {
-        setUnchecked(ddmShowLabel, true)
+        setUnchecked(ddmShowLabel, 'showLabel')
       }
 
       if (multiple) {
-        setChecked(ddmMultiple)
+        setChecked(ddmMultiple, 'multiple')
+      }
+
+      if (inline) {
+        setChecked(ddmInline, 'inline')
       }
     }
   }
@@ -163,8 +198,11 @@ class FormView extends TestBase {
           cy.get('.sidebar-body .custom-object-field').should('have.length', 0)
         })
 
-        it(`Should search for ${firstFieldType} and found matching value`, () => {
-          cy.get('.custom-object-sidebar-header input').clear().type(firstFieldType).should('have.value', firstFieldType)
+        it(`Should search for ${firstFieldType.name} and found matching value`, () => {
+          cy.get('.custom-object-sidebar-header input')
+            .clear()
+            .type(firstFieldType.name)
+            .should('have.value', firstFieldType.name)
           cy.get('.sidebar-body .custom-object-field').should('have.length', 1)
         })
 
@@ -194,15 +232,20 @@ class FormView extends TestBase {
           cy.get('@search-input').clear()
         })
 
-        this.constants.fieldTypes.filter(({ type }) => type === 'text').map((field) => {
+        this.constants.fieldTypes.filter(({ type }) => type).map((field) => {
           const { name, type } = field
-          it(`Add field ${name} on DataLayoutBuilder`, () => {
-            cy.get(`[data-field-type-name="${type}"]`).dblclick()
-            cy.get('div[data-field-name="label"] input').should('have.value', name)
+          describe(`Add ${name} Field and Fill Values`, () => {
+            it('add field on DataLayout', () => {
+              cy.get(`[data-field-type-name="${type}"]`).dblclick()
+              cy.get('div[data-field-name="label"] input').should('have.value', name)
+            })
 
             this._fieldCompose(field)
 
-            // cy.get('.sidebar-header button').eq(0).click()
+            it('Dispose', () => {
+              cy.get('.sidebar-header button').eq(0).click()
+            })
+
             // cy.get('.form-builder-layout .ddm-label').contains(name)
           })
         })
@@ -215,8 +258,8 @@ class FormView extends TestBase {
       beforeEach(() => {
         cy.wait(100)
       })
-      // this.title()
-      // this.sidebarLeft()
+      this.title()
+      this.sidebarLeft()
       this.sidebarRight()
     })
   }

@@ -1,13 +1,15 @@
 module.exports = {
-  ddmLabel: '[data-field-name="label"]',
-  ddmPlaceholder: '[data-field-name="placeholder"]',
-  ddmTip: '[data-field-name="tip"]',
   ddmDisplayStyle: '[data-field-name="displayStyle"]',
-  ddmRequired: '[data-field-name="required"]',
+  ddmInline: '[data-field-name="inline"]',
+  ddmLabel: '[data-field-name="label"]',
+  ddmMultiple: '[data-field-name="multiple"]',
+  ddmPlaceholder: '[data-field-name="placeholder"]',
   ddmPredefinedValue: '[data-field-name="predefinedValue"]',
-  ddmVisibilityExpression: '[data-field-name="visibilityExpression"]',
-  ddmShowLabel: '[data-field-name="showLabel"]',
   ddmRepeatable: '[data-field-name="repeatable"]',
+  ddmRequired: '[data-field-name="required"]',
+  ddmShowAsSwitcher: '[data-field-name="showAsSwitcher"]',
+  ddmShowLabel: '[data-field-name="showLabel"]',
+  ddmTip: '[data-field-name="tip"]',
   ddmTooltip: '[data-field-name="tooltip"]',
-  ddmMultiple: '[data-field-name="multiple"]'
+  ddmVisibilityExpression: '[data-field-name="visibilityExpression"]'
 }
