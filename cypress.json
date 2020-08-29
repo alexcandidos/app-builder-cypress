@@ -1,4 +1,5 @@
 {
     "viewportWidth": 1378,
-    "viewportHeight": 820
+    "viewportHeight": 820,
+    "testFiles": "**/*.spec.js"
 }
