@@ -1,5 +1,12 @@
 {
     "viewportWidth": 1378,
     "viewportHeight": 820,
-    "testFiles": "**/*.spec.js"
+    "testFiles": "**/*.spec.js",
+    "reporter": "mochawesome",
+    "reporterOptions": {
+        "reportDir": "cypress/results",
+        "overwrite": false,
+        "html": false,
+        "json": true
+    }
 }
