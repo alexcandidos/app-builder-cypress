@@ -161,7 +161,7 @@ class FormView extends TestBase {
 
   sidebarLeft () {
     describe('Sidebar Left', () => {
-      const [firstFieldType] = this.config.fieldTypes
+      const [firstFieldType] = this.config.formView.fieldTypes
       it('Object name should be shown', () => {
         cy.get('.data-layout-builder-sidebar form h3').contains(this.config.object.name)
       })
@@ -171,7 +171,7 @@ class FormView extends TestBase {
           cy.get('.empty.sidebar-body').should('be.visible')
         })
 
-        this.config.fieldTypes.map(({ name: field }, index) => {
+        this.config.formView.fieldTypes.map(({ name: field }, index) => {
           it(`Add ${field} on Sidebar`, () => {
             cy.get('.custom-object-dropdown button').click()
 
@@ -184,8 +184,8 @@ class FormView extends TestBase {
           })
         })
 
-        it(`Should have ${this.config.fieldTypes.length} Types on The List`, () => {
-          cy.get('.sidebar-body .custom-object-field').should('have.length', this.config.fieldTypes.length)
+        it(`Should have ${this.config.formView.fieldTypes.length} Types on The List`, () => {
+          cy.get('.sidebar-body .custom-object-field').should('have.length', this.config.formView.fieldTypes.length)
         })
 
         it('Should search for Liferay and found nothing', () => {
@@ -231,7 +231,7 @@ class FormView extends TestBase {
           cy.get('@search-input').clear()
         })
 
-        this.config.fieldTypes.filter(({ type }) => type).map((field) => {
+        this.config.formView.fieldTypes.filter(({ type }) => type).map((field) => {
           const { name, type } = field
           describe(`Add ${name} Field and Fill Values`, () => {
             it('add field on DataLayout', () => {
@@ -244,32 +244,37 @@ class FormView extends TestBase {
             it('Dispose', () => {
               cy.get('.sidebar-header button').eq(0).click()
             })
-
-            // cy.get('.form-builder-layout .ddm-label').contains(name)
           })
         })
       }
-    })
-
-    this.submit()
-  }
-
-  submit () {
-    describe('Submit', () => {
-      it('Submit FormView', () => {
-        cy.get('.app-builder-upper-toolbar button.btn-primary').click()
-      })
     })
   }
 
   runPipeline () {
     describe('AppBuilder - FormView', () => {
+      const name = this.config.formView.name
       beforeEach(() => {
         cy.wait(100)
       })
-      this.title()
+
       this.sidebarLeft()
       this.sidebarRight()
+
+      describe('Fill FormView title and save it', () => {
+        it('Set title', () => {
+          this.managementTitle(name)
+        })
+      })
+
+      describe('Submit', () => {
+        it('Submit FormView', () => {
+          cy.get('.app-builder-upper-toolbar button.btn-primary').click()
+        })
+
+        it('Validate ListView', () => {
+          this.validateListView(name)
+        })
+      })
     })
   }
 

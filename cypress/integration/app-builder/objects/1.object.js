@@ -4,6 +4,7 @@ const TestBase = require('../../test.base')
 const FormView = require('../form-view/1.form-view')
 const signIn = require('../../portal/sign-in')
 const pipelines = require('../../helpers/pipelines')
+const TableView = require('../table-view/1.table-view')
 
 class AppBuilderObject extends TestBase {
   constructor () {
@@ -93,8 +94,13 @@ class AppBuilderObject extends TestBase {
           this.createAnObject(pipeline.name)
         })
 
-        describe('run FormView pipeline', () => {
+        describe('Run FormView pipeline', () => {
           formView.runPipeline()
+        })
+
+        describe('Run TableView pipeline', () => {
+          const tableView = new TableView(pipeline)
+          tableView.pipeline()
         })
       })
     })

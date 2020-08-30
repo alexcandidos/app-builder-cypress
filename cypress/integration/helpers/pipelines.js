@@ -96,92 +96,105 @@ const fieldTypeGenerator = (fieldTypes = types) => {
 
 const Scenarios = {
   SCENARIO_1: {
-    fieldTypes: [
-      {
-        config: {
-          displayType: 'multiple',
-          help: 'Its recommended inform the School Name',
-          label: 'School Name',
-          placeholder: 'School name here',
-          predefinedValue: 'Keven',
-          repeatable: true,
-          required: true
+    formView: {
+      fieldTypes: [
+        {
+          config: {
+            displayType: 'multiple',
+            help: 'Its recommended inform the School Name',
+            label: 'School Name',
+            placeholder: 'School name here',
+            predefinedValue: 'Keven',
+            repeatable: true,
+            required: true
+          },
+          name: 'Text',
+          type: 'text'
         },
-        name: 'Text',
-        type: 'text'
-      },
-      {
-        config: {
-          help: 'Student Grade',
-          label: 'School Grade',
-          multiple: true,
-          options: ['First Grade', 'Second Grade', 'Third Grade'],
-          repeatable: true,
-          required: true
+        {
+          config: {
+            help: 'Student Grade',
+            label: 'School Grade',
+            multiple: true,
+            options: ['First Grade', 'Second Grade', 'Third Grade'],
+            repeatable: true,
+            required: true
+          },
+          name: 'Select from List',
+          type: 'select'
         },
-        name: 'Select from List',
-        type: 'select'
-      },
-      {
-        config: {
-          help: 'Self Care',
-          label: 'Self Care',
-          options: ['First aid', 'Health Package', 'Playground'],
-          repeatable: true,
-          required: true
+        {
+          config: {
+            help: 'Self Care',
+            label: 'Self Care',
+            options: ['First aid', 'Health Package', 'Playground'],
+            repeatable: true,
+            required: true
+          },
+          name: 'Single Selection',
+          type: 'radio'
         },
-        name: 'Single Selection',
-        type: 'radio'
-      },
-      {
-        config: {
-          help: 'Basic Toolkit',
-          inline: true,
-          label: 'Basic Toolkit',
-          options: ['Pencil', 'Pen', 'Eraser', 'Notebook'],
-          repeatable: true,
-          required: true
+        {
+          config: {
+            help: 'Basic Toolkit',
+            inline: true,
+            label: 'Basic Toolkit',
+            options: ['Pencil', 'Pen', 'Eraser', 'Notebook'],
+            repeatable: true,
+            required: true
+          },
+          name: 'Multiple Selection',
+          type: 'checkbox_multiple'
         },
-        name: 'Multiple Selection',
-        type: 'checkbox_multiple'
-      },
-      {
-        config: {
-          help: 'Student Born Date',
-          label: 'Student Born',
-          repeatable: true,
-          required: true
+        {
+          config: {
+            help: 'Student Born Date',
+            label: 'Student Born',
+            repeatable: true,
+            required: true
+          },
+          name: 'Date',
+          type: 'date'
         },
-        name: 'Date',
-        type: 'date'
-      },
-      {
-        config: {
-          help: 'Student Grade',
-          label: 'School Grade',
-          repeatable: true,
-          required: true
+        {
+          config: {
+            help: 'Student Age',
+            label: 'Student Age',
+            repeatable: true,
+            required: true
+          },
+          name: 'Numeric',
+          type: 'numeric'
         },
-        name: 'Numeric',
-        type: 'numeric'
-      },
-      { name: 'Fields Group' },
-      { name: 'Upload', type: 'document_library' }
-    ],
+        { name: 'Fields Group' },
+        { name: 'Upload', type: 'document_library' }
+      ],
+      name: {
+        en_US: 'School',
+        pt_BR: 'Escola'
+      }
+    },
     name: 'School',
     object: {
       name: 'School',
       newObject: true
-    }
-  },
-  SCENARIO_2: {
-    fieldTypes: fieldTypeGenerator(types),
-    name: 'Random',
-    object: {
-      name: 'Random',
-      newObject: true
+    },
+    tableView: {
+      name: {
+        en_US: 'School',
+        pt_BR: 'Escola'
+      },
+      newTableView: true
     }
   }
+//   SCENARIO_2: {
+//     fieldTypes: fieldTypeGenerator(types),
+//     name: 'Random',
+//     object: {
+//       name: 'Random',
+//       newObject: true
+//     }
+//   }
 }
 
 // console.log(Scenarios.SCENARIO_1)
