@@ -1,5 +1,4 @@
 const TestBase = require('../../test.base')
-const { ddmInline } = require('../../helpers/selectors')
 
 class FormView extends TestBase {
   constructor (config = {
@@ -162,17 +161,17 @@ class FormView extends TestBase {
 
   sidebarLeft () {
     describe('Sidebar Left', () => {
-      const [firstFieldType] = this.constants.fieldTypes
+      const [firstFieldType] = this.config.fieldTypes
       it('Object name should be shown', () => {
-        cy.get('.data-layout-builder-sidebar form h3').contains(this.config.objectName)
+        cy.get('.data-layout-builder-sidebar form h3').contains(this.config.object.name)
       })
 
-      if (this.config.newObject) {
+      if (this.config.object.newObject) {
         it('Should show empty state', () => {
           cy.get('.empty.sidebar-body').should('be.visible')
         })
 
-        this.constants.fieldTypes.map(({ name: field }, index) => {
+        this.config.fieldTypes.map(({ name: field }, index) => {
           it(`Add ${field} on Sidebar`, () => {
             cy.get('.custom-object-dropdown button').click()
 
@@ -185,8 +184,8 @@ class FormView extends TestBase {
           })
         })
 
-        it(`Should have ${this.constants.fieldTypes.length} Types on The List`, () => {
-          cy.get('.sidebar-body .custom-object-field').should('have.length', this.constants.fieldTypes.length)
+        it(`Should have ${this.config.fieldTypes.length} Types on The List`, () => {
+          cy.get('.sidebar-body .custom-object-field').should('have.length', this.config.fieldTypes.length)
         })
 
         it('Should search for Liferay and found nothing', () => {
@@ -221,7 +220,7 @@ class FormView extends TestBase {
 
   sidebarRight () {
     describe('Sidebar Right', () => {
-      if (this.config.newObject) {
+      if (this.config.object.newObject) {
         it('Search for Liferay as Field and Found Nothing', () => {
           cy.get('.sidebar-header input')
             .as('search-input')
@@ -232,7 +231,7 @@ class FormView extends TestBase {
           cy.get('@search-input').clear()
         })
 
-        this.constants.fieldTypes.filter(({ type }) => type).map((field) => {
+        this.config.fieldTypes.filter(({ type }) => type).map((field) => {
           const { name, type } = field
           describe(`Add ${name} Field and Fill Values`, () => {
             it('add field on DataLayout', () => {
@@ -251,6 +250,16 @@ class FormView extends TestBase {
         })
       }
     })
+
+    this.submit()
+  }
+
+  submit () {
+    describe('Submit', () => {
+      it('Submit FormView', () => {
+        cy.get('.app-builder-upper-toolbar button.btn-primary').click()
+      })
+    })
   }
 
   runPipeline () {
@@ -264,8 +273,8 @@ class FormView extends TestBase {
     })
   }
 
-  run (objectName) {
-    this.runPipeline(objectName)
+  run () {
+    this.runPipeline()
   }
 }
 

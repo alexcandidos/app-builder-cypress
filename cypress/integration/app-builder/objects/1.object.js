@@ -3,6 +3,7 @@
 const TestBase = require('../../test.base')
 const FormView = require('../form-view/1.form-view')
 const signIn = require('../../portal/sign-in')
+const pipelines = require('../../helpers/pipelines')
 
 class AppBuilderObject extends TestBase {
   constructor () {
@@ -11,14 +12,14 @@ class AppBuilderObject extends TestBase {
     this.lastObject = null
   }
 
-  createAnObject (unCheck = false) {
+  createAnObject (name, unCheck = false) {
     cy.get('button[data-title="New Custom Object"]').click()
 
     cy.get('.popover.mw-100').within(() => {
       if (unCheck) {
         cy.get('input[type="checkbox"]').should('be.checked').uncheck()
       }
-      cy.get('#customObjectNameInput').type(`${this.objectName}{enter}`, {
+      cy.get('#customObjectNameInput').type(`${name}{enter}`, {
         delay: 20
       })
     })
@@ -38,32 +39,63 @@ class AppBuilderObject extends TestBase {
   }
 
   test () {
-    signIn.test()
+    this.pipeline()
+    // signIn.test()
 
-    describe('Object', () => {
-      const formView = new FormView({
-        newObject: true,
-        objectName: this.objectName
-      })
+    // describe('Object', () => {
+    //   const formView = new FormView({
+    //     newObject: true,
+    //     objectName: this.objectName
+    //   })
 
-      beforeEach(() => {
-        this.preserve()
-      })
+    //   beforeEach(() => {
+    //     this.preserve()
+    //   })
 
-      it('Navigate to Object', () => {
-        cy.visit(this.constants.object)
-      })
+    //   it('Navigate to Object', () => {
+    //     cy.visit(this.constants.object)
+    //   })
 
-      it('Should delete all Objects', () => {
-        this.deleteAllObjects()
-      })
+    //   it('Should delete all Objects', () => {
+    //     this.deleteAllObjects()
+    //   })
 
-      it('should create an custom object and go to form view', () => {
-        this.createAnObject()
-      })
+    //   it('should create an custom object and go to form view', () => {
+    //     this.createAnObject()
+    //   })
 
-      describe('run FormView pipeline', () => {
-        formView.runPipeline('Liferay Object')
+    //   describe('run FormView pipeline', () => {
+    //     formView.runPipeline('Liferay Object')
+    //   })
+    // })
+  }
+
+  pipeline () {
+    // signIn.test()
+
+    Object.keys(pipelines).forEach((key) => {
+      const pipeline = pipelines[key]
+      const formView = new FormView(pipeline)
+      describe(`Execute Pipeline: [${pipeline.name}]`, () => {
+        beforeEach(() => {
+          this.preserve()
+        })
+
+        it('Navigate to Object', () => {
+          cy.visit(this.constants.object)
+        })
+
+        it('Should delete all Objects', () => {
+          this.deleteAllObjects()
+        })
+
+        it('should create an custom object and go to form view', () => {
+          this.createAnObject(pipeline.name)
+        })
+
+        describe('run FormView pipeline', () => {
+          formView.runPipeline()
+        })
       })
     })
   }
