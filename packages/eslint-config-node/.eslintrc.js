@@ -8,20 +8,25 @@ module.exports = {
   extends: [
     'standard',
     'prettier/standard',
-    'plugin:cypress/recommended'
+    'plugin:cypress/recommended',
+    'plugin:react/recommended',
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
   },
   parserOptions: {
-    ecmaVersion: 2018
+    ecmaVersion: 2018,
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
   plugins: [
     'cypress',
     'simple-import-sort',
     'sort-destructure-keys',
-    'sort-keys-fix'
+    'sort-keys-fix',
+    'react'
   ],
   rules: {
     'cypress/assertion-before-screenshot': 'warn',
@@ -32,6 +37,12 @@ module.exports = {
     'max-len': ['error', { code: 120 }],
     'simple-import-sort/sort': 'error',
     'sort-destructure-keys/sort-destructure-keys': [2, { caseSensitive: false }],
-    'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false, minKeys: 2 }]
+    'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false, minKeys: 2 }],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+          "extensions": [".js", ".jsx"]
+      }
+    ],
   }
 }
