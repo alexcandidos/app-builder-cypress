@@ -1,12 +1,15 @@
-import React from 'react';
-import List from './pages/Scenario/List'
+import React from 'react'
 
-function App() {
+import ApplicationBar from './components/ApplicationBar'
+import Routes from './routes'
+
+function App () {
   return (
-    <div className="App">
-      <List />
+    <div>
+      <ApplicationBar />
+      <Routes />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
