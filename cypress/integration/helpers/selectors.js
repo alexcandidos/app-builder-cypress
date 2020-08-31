@@ -1,12 +1,11 @@
-const tabs = ['Form Views', 'Table Views', 'Apps']
 module.exports = {
+  accountSettingsLanguageSelect: '#_com_liferay_my_account_web_portlet_MyAccountPortlet_languageId',
   changeObjectTab: (index) => {
     cy
       .wait(1000)
       .get('.custom-object-app .nav-item')
       .eq(index)
       .click()
-      .contains(tabs[index])
   },
   ddmDisplayStyle: '[data-field-name="displayStyle"]',
   ddmInline: '[data-field-name="inline"]',
@@ -20,5 +19,6 @@ module.exports = {
   ddmShowLabel: '[data-field-name="showLabel"]',
   ddmTip: '[data-field-name="tip"]',
   ddmTooltip: '[data-field-name="tooltip"]',
-  ddmVisibilityExpression: '[data-field-name="visibilityExpression"]'
+  ddmVisibilityExpression: '[data-field-name="visibilityExpression"]',
+  instanceLanguageSelect: '#_com_liferay_configuration_admin_web_portlet_InstanceSettingsPortlet_languageId'
 }

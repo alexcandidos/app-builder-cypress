@@ -1,4 +1,6 @@
 const { random: { boolean, number } } = require('faker')
+const constants = require('./constants')
+
 const defaultOptions = ['help', 'label', 'required', 'showLabel', 'repeatable']
 
 const types = [
@@ -171,6 +173,7 @@ const Scenarios = {
       ],
       name: {
         en_US: 'School',
+        es_ES: 'Iscola',
         pt_BR: 'Escola'
       }
     },
@@ -179,9 +182,22 @@ const Scenarios = {
       name: 'School',
       newObject: true
     },
+    portal: {
+      defaultLanguageId: constants.languages.pt_BR.key,
+      languageId: constants.languages.pt_BR.key,
+      repeatsOn: [{
+        defaultLanguageId: constants.languages.es_ES.key,
+        languageId: constants.languages.es_ES.key
+      },
+      {
+        defaultLanguageId: constants.languages.en_US.key,
+        languageId: constants.languages.en_US.key
+      }]
+    },
     tableView: {
       name: {
         en_US: 'School',
+        es_ES: 'Iscola',
         pt_BR: 'Escola'
       },
       newTableView: true

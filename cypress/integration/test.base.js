@@ -3,10 +3,11 @@ const selectors = require('./helpers/selectors')
 const faker = require('faker')
 
 class TestBase {
-  constructor () {
+  constructor (config) {
     this.constants = constants
     this.selectors = selectors
     this.faker = faker
+    this.pipelineConfig = config
   }
 
   preserve () {
@@ -27,7 +28,8 @@ class TestBase {
     cy.get('.taglib-empty-result-message').should('be.visible')
   }
 
-  managementTitle (name) {
+  managementTitle (name, portal) {
+    const normalizeLang = (lang) => lang.replace('_', '-').toLowerCase()
     const selectLanguage = (lang, force = false) => {
       cy.get('.app-builder-upper-toolbar').within(() => {
         cy.get('.localizable-dropdown button').click()
@@ -41,7 +43,7 @@ class TestBase {
     if (typeof name === 'object') {
       Object.keys(name).forEach((languageId) => {
         const value = name[languageId]
-        const lang = languageId.replace('_', '-').toLowerCase()
+        const lang = normalizeLang(languageId)
 
         selectLanguage(lang)
         cy.get('.app-builder-upper-toolbar').within(() => {
@@ -49,12 +51,15 @@ class TestBase {
         })
       })
 
-      selectLanguage('en-us', true)
+      selectLanguage(normalizeLang(portal.defaultLanguageId), true)
     }
   }
 
   validateListView (name) {
-    const localizedValue = name.en_US
+    const { defaultLanguageId, languageId } = this.pipelineConfig.portal
+    const localizedValue = name[languageId] || name[defaultLanguageId]
+    cy.wait(1500)
+
     cy.get('form input')
       .eq(0)
       .should('not.have.value')
@@ -65,7 +70,7 @@ class TestBase {
     cy.get('.tbar-section')
       .as('section')
       .should('be.visible')
-      .contains(`1 Results for ${localizedValue}`)
+      .contains(localizedValue)
 
     cy.get('tbody tr').should('have.length', 1).as('row')
 
@@ -74,11 +79,11 @@ class TestBase {
       .type('Liferay {enter}')
       .should('have.value', 'Liferay')
 
-    cy.get('@section').should('be.visible').contains('0 Results for Liferay')
+    cy.get('@section').should('be.visible').contains('Liferay')
 
     this.emptyState()
 
-    cy.get('@section').find('button').click()
+    cy.get('@section').find('button').click({ force: true })
   }
 }
 

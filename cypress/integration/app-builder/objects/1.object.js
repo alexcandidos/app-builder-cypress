@@ -5,6 +5,7 @@ const FormView = require('../form-view/1.form-view')
 const signIn = require('../../portal/sign-in')
 const pipelines = require('../../helpers/pipelines')
 const TableView = require('../table-view/1.table-view')
+const Language = require('../../portal/language')
 
 class AppBuilderObject extends TestBase {
   constructor () {
@@ -14,7 +15,7 @@ class AppBuilderObject extends TestBase {
   }
 
   createAnObject (name, unCheck = false) {
-    cy.get('button[data-title="New Custom Object"]').click()
+    cy.get('.nav-item button.btn-primary').click()
 
     cy.get('.popover.mw-100').within(() => {
       if (unCheck) {
@@ -34,74 +35,63 @@ class AppBuilderObject extends TestBase {
       })
     }
     cy.get('tbody tr').each((_, index) => {
-      // cy.wait(2000)
+      cy.wait(2000)
       deleteRow(index)
     })
   }
 
-  test () {
-    this.pipeline()
-    // signIn.test()
+  pipeline (pipeline) {
+    const tableView = new TableView(pipeline)
+    const formView = new FormView(pipeline)
+    const portalLanguage = new Language(pipeline)
 
-    // describe('Object', () => {
-    //   const formView = new FormView({
-    //     newObject: true,
-    //     objectName: this.objectName
-    //   })
+    portalLanguage.normalizeLanguages()
 
-    //   beforeEach(() => {
-    //     this.preserve()
-    //   })
+    describe('Run Portal on Instance', () => {
+      it('Navigate to Object', () => {
+        cy.visit(this.constants.modules.object)
+      })
 
-    //   it('Navigate to Object', () => {
-    //     cy.visit(this.constants.object)
-    //   })
+      it('Should delete all Objects', () => {
+        this.deleteAllObjects()
+      })
 
-    //   it('Should delete all Objects', () => {
-    //     this.deleteAllObjects()
-    //   })
+      it('should create an custom object and go to form view', () => {
+        this.createAnObject(pipeline.name)
+      })
 
-    //   it('should create an custom object and go to form view', () => {
-    //     this.createAnObject()
-    //   })
+      describe('Run FormView pipeline', () => {
+        formView.runPipeline()
+      })
 
-    //   describe('run FormView pipeline', () => {
-    //     formView.runPipeline('Liferay Object')
-    //   })
-    // })
+      describe('Run TableView pipeline', () => {
+        tableView.pipeline()
+      })
+    })
   }
 
-  pipeline () {
+  test () {
     // signIn.test()
 
     Object.keys(pipelines).forEach((key) => {
       const pipeline = pipelines[key]
-      const formView = new FormView(pipeline)
+
       describe(`Execute Pipeline: [${pipeline.name}]`, () => {
         beforeEach(() => {
           this.preserve()
         })
 
-        it('Navigate to Object', () => {
-          cy.visit(this.constants.object)
-        })
-
-        it('Should delete all Objects', () => {
-          this.deleteAllObjects()
-        })
-
-        it('should create an custom object and go to form view', () => {
-          this.createAnObject(pipeline.name)
-        })
-
-        describe('Run FormView pipeline', () => {
-          formView.runPipeline()
-        })
-
-        describe('Run TableView pipeline', () => {
-          const tableView = new TableView(pipeline)
-          tableView.pipeline()
-        })
+        if (pipeline.portal.repeatsOn) {
+          pipeline.portal.repeatsOn.forEach((instance) => {
+            this.pipeline({
+              ...pipeline,
+              portal: {
+                ...pipeline.portal,
+                ...instance
+              }
+            })
+          })
+        }
       })
     })
   }

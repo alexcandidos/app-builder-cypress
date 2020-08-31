@@ -2,7 +2,7 @@ const TestBase = require('../../test.base')
 
 class TableView extends TestBase {
   constructor (config) {
-    super()
+    super(config)
     this.config = config
   }
 
@@ -20,11 +20,11 @@ class TableView extends TestBase {
 
     if (this.config.tableView.newTableView) {
       it('Open Add TableView', () => {
-        cy.get('[data-title="New Table View"]').click()
+        cy.get('.nav-item button.btn-primary').click()
       })
 
       it('Should set TableView title', () => {
-        this.managementTitle(this.config.tableView.name)
+        this.managementTitle(this.config.tableView.name, this.config.portal)
       })
 
       it('Should Collapse (close) Sidebar', () => {
@@ -79,7 +79,7 @@ class TableView extends TestBase {
       })
 
       describe('Save and validate the TableView', () => {
-        xit('Should save the Table View', () => {
+        it('Should save the Table View', () => {
           cy.get('.btn-primary').click()
         })
 

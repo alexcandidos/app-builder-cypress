@@ -4,7 +4,7 @@ class FormView extends TestBase {
   constructor (config = {
     newObject: false
   }) {
-    super()
+    super(config)
     this.config = config
   }
 
@@ -87,8 +87,7 @@ class FormView extends TestBase {
 
     if (label) {
       it(`Typing [${label}] on [Label]`, () => {
-        cy.get(`${ddmLabel} input`)
-          .should('have.value', field.name)
+        cy.get(`${ddmLabel} input.ddm-field-text`)
           .clear()
           .type(label)
           .should('have.value', label)
@@ -179,8 +178,8 @@ class FormView extends TestBase {
               cy.get('button').eq(index).click()
             })
 
-            cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
-            cy.get('div[data-field-name="label"] input').should('have.value', field)
+            // cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
+            // cy.get('div[data-field-name="label"] input').should('have.value', field)
           })
         })
 
@@ -236,7 +235,6 @@ class FormView extends TestBase {
           describe(`Add ${name} Field and Fill Values`, () => {
             it('add field on DataLayout', () => {
               cy.get(`[data-field-type-name="${type}"]`).dblclick()
-              cy.get('div[data-field-name="label"] input').should('have.value', name)
             })
 
             this._fieldCompose(field)
@@ -262,7 +260,7 @@ class FormView extends TestBase {
 
       describe('Fill FormView title and save it', () => {
         it('Set title', () => {
-          this.managementTitle(name)
+          this.managementTitle(name, this.config.portal)
         })
       })
 
