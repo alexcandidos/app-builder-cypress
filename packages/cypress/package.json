@@ -8,7 +8,8 @@
   },
   "scripts": {
     "cypress:open": "./node_modules/.bin/cypress open",
-    "cypress:run": "./node_modules/.bin/cypress run"
+    "cypress:run": "./node_modules/.bin/cypress run",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "mochawesome": "^6.1.1",

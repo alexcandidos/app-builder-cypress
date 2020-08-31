@@ -1,4 +1,4 @@
-const TestBase = require('../test.base')
+const TestBase = require('../test.base');
 
 class Language extends TestBase {
   constructor (config = { portal: { defaultLanguageId: undefined, languageId: undefined } }) {
