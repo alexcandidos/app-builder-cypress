@@ -1,30 +1,27 @@
 {
   "name": "app-builder-cypress",
   "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kevenleone/app-builder-cypress.git",
+  "author": "Keven <keven.santos.sz@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "cypress": "^5.0.0",
-    "faker": "^5.1.0"
-  },
+  "private": true,
   "scripts": {
-    "cypress:open": "./node_modules/.bin/cypress open",
-    "cypress:run": "./node_modules/.bin/cypress run"
+    "cypress:run": "yarn workspace @app-builder-cypress/cypress cypress:run",
+    "cypress:open": "yarn workspace @app-builder-cypress/cypress cypress:open",
+    "start:frontend": "yarn workspace @app-builder-cypress/frontend start",
+    "start:backend": "yarn workspace @app-builder-cypress/backend dev",
+    "migrate": "yarn workspace @app-builder-cypress/backend migrate",
+    "studio": "yarn workspace @app-builder-cypress/backend studio",
+    "format:frontend": "eslint packages/frontend/**/*.ts --fix",
+    "format": "eslint packages/backend/src/* --ext .ts --fix"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
   },
   "devDependencies": {
-    "eslint": "^7.7.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-cypress": "^2.11.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-simple-import-sort": "^5.0.3",
-    "eslint-plugin-sort-destructure-keys": "^1.3.5",
-    "eslint-plugin-sort-keys-fix": "^1.1.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "mochawesome": "^6.1.1",
-    "mochawesome-merge": "^4.1.0",
-    "mochawesome-report-generator": "^5.1.0",
-    "prettier": "^2.1.1"
+    "@app-builder-cypress/eslint-config-node": "*"
   }
 }

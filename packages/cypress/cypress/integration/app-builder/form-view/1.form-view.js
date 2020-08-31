@@ -12,7 +12,7 @@ class FormView extends TestBase {
     cy.get('.custom-object-field').each(() => {
       cy.get('.field-type-remove-icon button').eq(0).click({ force: true })
 
-      cy.get('.modal.show button.btn-primary').click()
+      cy.get('.modal.show button.btn-primary').click();
     })
   }
 
