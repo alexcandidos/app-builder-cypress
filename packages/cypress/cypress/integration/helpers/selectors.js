@@ -20,5 +20,6 @@ module.exports = {
   ddmTip: '[data-field-name="tip"]',
   ddmTooltip: '[data-field-name="tooltip"]',
   ddmVisibilityExpression: '[data-field-name="visibilityExpression"]',
-  instanceLanguageSelect: '#_com_liferay_configuration_admin_web_portlet_InstanceSettingsPortlet_languageId'
+  instanceLanguageSelect: '#_com_liferay_configuration_admin_web_portlet_InstanceSettingsPortlet_languageId',
+  primaryButton: 'button.btn.btn-primary'
 }

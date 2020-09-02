@@ -1,7 +1,6 @@
 import ClayButton from '@clayui/button'
 import ClayLayout from '@clayui/layout'
 import ClayPanel from '@clayui/panel'
-import { Form } from '@unform/web'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
@@ -10,13 +9,9 @@ const FormContainer = ({ children, history, onSubmit = () => {} }) => {
     <ClayLayout.ContainerFluid className="mt-6">
       <div className="row">
         <div className="col col-12">
-          <Form
+          <form
             className="sheet"
-            onSubmit={(e) => {
-              if (e) {
-                onSubmit(e)
-              }
-            }}
+            onSubmit={onSubmit}
           >
             <div className="sheet-header">
               <h2 className="sheet-title">Scenario Creator</h2>
@@ -40,7 +35,7 @@ const FormContainer = ({ children, history, onSubmit = () => {} }) => {
                 </div>
               </ClayButton.Group>
             </div>
-          </Form>
+          </form>
         </div>
       </div>
     </ClayLayout.ContainerFluid>

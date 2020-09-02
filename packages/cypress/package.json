@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "cypress": "^5.0.0",
+    "cypress": "5.1.0",
     "faker": "^5.1.0"
   },
   "scripts": {

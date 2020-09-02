@@ -98,6 +98,19 @@ const fieldTypeGenerator = (fieldTypes = types) => {
 
 const Scenarios = {
   SCENARIO_1: {
+    app: {
+      name: {
+        en_US: 'School',
+        es_ES: 'Iscola',
+        pt_BR: 'Escola'
+      },
+      newApp: true,
+      options: {
+        product: false,
+        standalone: true,
+        widget: true
+      }
+    },
     formView: {
       fieldTypes: [
         {
@@ -112,64 +125,64 @@ const Scenarios = {
           },
           name: 'Text',
           type: 'text'
-        },
-        {
-          config: {
-            help: 'Student Grade',
-            label: 'School Grade',
-            multiple: true,
-            options: ['First Grade', 'Second Grade', 'Third Grade'],
-            repeatable: true,
-            required: true
-          },
-          name: 'Select from List',
-          type: 'select'
-        },
-        {
-          config: {
-            help: 'Self Care',
-            label: 'Self Care',
-            options: ['First aid', 'Health Package', 'Playground'],
-            repeatable: true,
-            required: true
-          },
-          name: 'Single Selection',
-          type: 'radio'
-        },
-        {
-          config: {
-            help: 'Basic Toolkit',
-            inline: true,
-            label: 'Basic Toolkit',
-            options: ['Pencil', 'Pen', 'Eraser', 'Notebook'],
-            repeatable: true,
-            required: true
-          },
-          name: 'Multiple Selection',
-          type: 'checkbox_multiple'
-        },
-        {
-          config: {
-            help: 'Student Born Date',
-            label: 'Student Born',
-            repeatable: true,
-            required: true
-          },
-          name: 'Date',
-          type: 'date'
-        },
-        {
-          config: {
-            help: 'Student Age',
-            label: 'Student Age',
-            repeatable: true,
-            required: true
-          },
-          name: 'Numeric',
-          type: 'numeric'
-        },
-        { name: 'Fields Group' },
-        { name: 'Upload', type: 'document_library' }
+        }
+        // {
+        //   config: {
+        //     help: 'Student Grade',
+        //     label: 'School Grade',
+        //     multiple: true,
+        //     options: ['First Grade', 'Second Grade', 'Third Grade'],
+        //     repeatable: true,
+        //     required: true
+        //   },
+        //   name: 'Select from List',
+        //   type: 'select'
+        // },
+        // {
+        //   config: {
+        //     help: 'Self Care',
+        //     label: 'Self Care',
+        //     options: ['First aid', 'Health Package', 'Playground'],
+        //     repeatable: true,
+        //     required: true
+        //   },
+        //   name: 'Single Selection',
+        //   type: 'radio'
+        // },
+        // {
+        //   config: {
+        //     help: 'Basic Toolkit',
+        //     inline: true,
+        //     label: 'Basic Toolkit',
+        //     options: ['Pencil', 'Pen', 'Eraser', 'Notebook'],
+        //     repeatable: true,
+        //     required: true
+        //   },
+        //   name: 'Multiple Selection',
+        //   type: 'checkbox_multiple'
+        // },
+        // {
+        //   config: {
+        //     help: 'Student Born Date',
+        //     label: 'Student Born',
+        //     repeatable: true,
+        //     required: true
+        //   },
+        //   name: 'Date',
+        //   type: 'date'
+        // },
+        // {
+        //   config: {
+        //     help: 'Student Age',
+        //     label: 'Student Age',
+        //     repeatable: true,
+        //     required: true
+        //   },
+        //   name: 'Numeric',
+        //   type: 'numeric'
+        // },
+        // { name: 'Fields Group' },
+        // { name: 'Upload', type: 'document_library' }
       ],
       name: {
         en_US: 'School',
@@ -185,14 +198,7 @@ const Scenarios = {
     portal: {
       defaultLanguageId: constants.languages.pt_BR.key,
       languageId: constants.languages.pt_BR.key,
-      repeatsOn: [{
-        defaultLanguageId: constants.languages.es_ES.key,
-        languageId: constants.languages.es_ES.key
-      },
-      {
-        defaultLanguageId: constants.languages.en_US.key,
-        languageId: constants.languages.en_US.key
-      }]
+      repeatsOn: []
     },
     tableView: {
       name: {

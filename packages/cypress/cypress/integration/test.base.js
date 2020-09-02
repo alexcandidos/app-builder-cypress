@@ -24,14 +24,22 @@ class TestBase {
     })
   }
 
+  getLanguageId () {
+    return this.pipelineConfig.portal.languageId || 'en_US'
+  }
+
+  getDefaultLanguageId () {
+    return this.pipelineConfig.portal.defaultLanguageId || 'en_US'
+  }
+
   emptyState () {
     cy.get('.taglib-empty-result-message').should('be.visible')
   }
 
-  managementTitle (name, portal) {
+  managementTitle (name) {
     const normalizeLang = (lang) => lang.replace('_', '-').toLowerCase()
     const selectLanguage = (lang, force = false) => {
-      cy.get('.app-builder-upper-toolbar').within(() => {
+      cy.get('.app-builder-root').within(() => {
         cy.get('.localizable-dropdown button').click()
       })
 
@@ -46,12 +54,12 @@ class TestBase {
         const lang = normalizeLang(languageId)
 
         selectLanguage(lang)
-        cy.get('.app-builder-upper-toolbar').within(() => {
+        cy.get('.app-builder-root').within(() => {
           cy.get('.tbar-item.tbar-item-expand input').type(value)
         })
       })
 
-      selectLanguage(normalizeLang(portal.defaultLanguageId), true)
+      selectLanguage(normalizeLang(this.pipelineConfig.portal.defaultLanguageId), true)
     }
   }
 

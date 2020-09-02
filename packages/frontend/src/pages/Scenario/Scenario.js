@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 
 import FormContainer from '../../components/FormContainer'
 import MultiStep from '../../components/MultiStep'
@@ -34,11 +34,13 @@ const Scenario = () => {
   }
 
   return (
-    <FormContainer onSubmit={onSubmit}>
-      <MultiStep steps={steps} />
-      {step === 0 && <StepForm />}
-      {step === 1 && <StepObject />}
-    </FormContainer>
+    <>
+      <FormContainer onSubmit={onSubmit}>
+        <MultiStep steps={steps} />
+        {step === 0 && <StepForm />}
+        {step === 1 && <StepObject />}
+      </FormContainer>
+    </>
   )
 }
 

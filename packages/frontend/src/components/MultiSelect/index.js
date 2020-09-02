@@ -1,8 +1,11 @@
 import ClayMultiSelect from '@clayui/multi-select'
-import React, { useState } from 'react'
+import { useField } from '@unform/core'
+import React, { useEffect, useRef, useState } from 'react'
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
 const MultiSelect = () => {
+  const { defaultValue, fieldName, registerField } = useField('myInput')
+  const inputRef = useRef(null)
   const [value, setValue] = useState('')
   const [items, setItems] = useState([
     {
@@ -11,8 +14,17 @@ const MultiSelect = () => {
     }
   ])
 
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      path: 'value',
+      ref: inputRef.current
+    })
+  }, [fieldName, registerField])
+
   return (
     <ClayMultiSelect
+      ref={inputRef}
       inputName="myInput"
       inputValue={value}
       items={items}

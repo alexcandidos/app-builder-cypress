@@ -1,6 +1,5 @@
 import ClayLocalizedInput from '@clayui/localized-input'
-import { useField } from '@unform/core'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
@@ -28,35 +27,29 @@ const locales = Object.keys(languages).map((key) => {
   }
 })
 
-const LocalizedField = (props) => {
-  const inputRef = useRef(null)
+const LocalizedField = ({ name, onChange = () => {}, ...props }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0])
   const [translations, setTranslations] = useState({})
 
-  const { fieldName, registerField } = useField(`${props.name}.${selectedLocale.label}`)
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      path: 'value',
-      ref: inputRef.current
-    })
-  }, [fieldName, registerField])
-
   const changeSelectedLocate = (value) => {
     setSelectedLocale(value)
+  }
+
+  const onTranslationChange = (value) => {
+    onChange(name, value)
+    setTranslations(value)
   }
 
   return (
     <ClayLocalizedInput
       {...props}
       id="locale1"
-      ref={inputRef}
       spritemap={spritemap}
       locales={locales}
-      onSelectedLocaleChange={changeSelectedLocate}
-      onTranslationsChange={setTranslations}
-      selectedLocale={selectedLocale}
       translations={translations}
+      onSelectedLocaleChange={changeSelectedLocate}
+      onTranslationsChange={onTranslationChange}
+      selectedLocale={selectedLocale}
     />
   )
 }

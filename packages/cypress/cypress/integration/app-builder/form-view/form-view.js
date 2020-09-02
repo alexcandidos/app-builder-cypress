@@ -255,7 +255,7 @@ class FormView extends TestBase {
         cy.wait(100)
       })
 
-      this.sidebarLeft()
+      // this.sidebarLeft()
       this.sidebarRight()
 
       describe('Fill FormView title and save it', () => {

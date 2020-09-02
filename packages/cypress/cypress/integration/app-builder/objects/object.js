@@ -1,11 +1,12 @@
 /// <reference types="cypress" />
 
 const TestBase = require('../../test.base')
-const FormView = require('../form-view/1.form-view')
+const FormView = require('../form-view/form-view')
 const signIn = require('../../portal/sign-in')
 const pipelines = require('../../helpers/pipelines')
-const TableView = require('../table-view/1.table-view')
+const TableView = require('../table-view/table-view')
 const Language = require('../../portal/language')
+const App = require('../app/app')
 
 class AppBuilderObject extends TestBase {
   constructor () {
@@ -31,7 +32,7 @@ class AppBuilderObject extends TestBase {
     const deleteRow = () => {
       cy.get('tbody tr:nth-child(1) .dropdown-action').click()
       cy.get('.dropdown-menu.show').within(() => {
-        cy.get('button').eq(4).click()
+        cy.get('button').eq(5).click()
       })
     }
     cy.get('tbody tr').each((_, index) => {
@@ -41,37 +42,46 @@ class AppBuilderObject extends TestBase {
   }
 
   pipeline (pipeline) {
+    const app = new App(pipeline)
     const tableView = new TableView(pipeline)
     const formView = new FormView(pipeline)
     const portalLanguage = new Language(pipeline)
 
-    portalLanguage.normalizeLanguages()
+    const { app: appConfig } = pipeline
+
+    // portalLanguage.normalizeLanguages()
 
     describe('Run Portal on Instance', () => {
-      it('Navigate to Object', () => {
-        cy.visit(this.constants.modules.object)
-      })
+      // it('Navigate to Object', () => {
+      //   cy.visit(this.constants.modules.object)
+      // })
 
-      it('Should delete all Objects', () => {
-        this.deleteAllObjects()
-      })
+      // it('Should delete all Objects', () => {
+      //   this.deleteAllObjects()
+      // })
 
-      it('should create an custom object and go to form view', () => {
-        this.createAnObject(pipeline.name)
-      })
+      // it('should create an custom object and go to form view', () => {
+      //   this.createAnObject(pipeline.name)
+      // })
 
-      describe('Run FormView pipeline', () => {
-        formView.runPipeline()
-      })
+      // describe('Run FormView pipeline', () => {
+      //   formView.runPipeline()
+      // })
 
-      describe('Run TableView pipeline', () => {
-        tableView.pipeline()
-      })
+      // describe('Run TableView pipeline', () => {
+      //   tableView.pipeline()
+      // })
+
+      if (appConfig) {
+        describe('Run App pipeline', () => {
+          app.pipeline()
+        })
+      }
     })
   }
 
   test () {
-    // signIn.test()
+    signIn.test()
 
     Object.keys(pipelines).forEach((key) => {
       const pipeline = pipelines[key]
@@ -81,7 +91,7 @@ class AppBuilderObject extends TestBase {
           this.preserve()
         })
 
-        if (pipeline.portal.repeatsOn) {
+        if (pipeline.portal.repeatsOn && pipeline.portal.repeatsOn.length) {
           pipeline.portal.repeatsOn.forEach((instance) => {
             this.pipeline({
               ...pipeline,
@@ -91,6 +101,8 @@ class AppBuilderObject extends TestBase {
               }
             })
           })
+        } else {
+          this.pipeline(pipeline)
         }
       })
     })

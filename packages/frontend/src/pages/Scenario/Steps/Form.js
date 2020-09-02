@@ -1,15 +1,119 @@
 import Button from '@clayui/button'
 import ClayPanel from '@clayui/panel'
-import { Scope } from '@unform/core'
 import React, { useState } from 'react'
 
-import InputField from '../../../components/Input'
+import { LocalizedInput, MultiInputSelection, Select, Toggle } from '../../../components/Input'
 import Modal from '../../../components/Modal'
-import MultiSelect from '../../../components/MultiSelect'
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
+const fieldTypes = [
+  {
+    label: 'Text',
+    value: 'text'
+  },
+  {
+    label: 'Select from List',
+    value: 'select'
+  },
+  {
+    label: 'Single Selection',
+    value: 'radio'
+  },
+  {
+    label: 'Multiple Selection',
+    value: 'checkbox_multiple'
+  },
+  {
+    label: 'Date',
+    value: 'date'
+  },
+  {
+    label: 'Numeric',
+    value: 'numeric'
+  },
+  { label: 'Upload', value: 'document_library' }
+]
+
+const FieldModal = () => {
+  const [visible, setVisible] = useState(true)
+  const [state, setState] = useState({
+    inline: true,
+    multiple: false,
+    repeatable: false,
+    showAsSwitcher: true,
+    showLabel: false
+  })
+
+  const onChange = (name, value) => {
+    setState({
+      ...state,
+      [name]: value
+    })
+  }
+
+  const onToggle = (name) => {
+    setState({
+      ...state,
+      [name]: !state[name]
+    })
+  }
+
+  return (
+    <>
+      <Button onClick={() => setVisible(!visible)}>Add Field</Button>
+      <Modal title="Create Form" visible={visible} setVisible={setVisible} onSubmit={(e) => console.log()}>
+        <Select label="Field Type" options={fieldTypes} />
+        <LocalizedInput
+          name="label"
+          onChange={onChange}
+          label="Label"
+        />
+        <LocalizedInput
+          name="help"
+          onChange={onChange}
+          label="Portal Language"
+          type="localized"
+        />
+        <LocalizedInput
+          name="predefinedValue"
+          onChange={onChange}
+          label="Predefined Value"
+          type="localized"
+        />
+        <LocalizedInput
+          name="placeholder"
+          onChange={onChange}
+          label="Placeholder"
+          type="localized"
+        />
+        <Toggle label="Repeatable"
+          onToggle={() => onToggle('repeatable')}
+          toggled={state.repeatable}
+        />
+        <Toggle
+          label="Inline"
+          onToggle={() => onToggle('inline')}
+          toggled={state.inline} />
+        <Toggle
+          label="Multiple"
+          onToggle={() => onToggle('multiple')}
+          toggled={state.multiple} />
+        <Toggle
+          label="Show As Switcher"
+          onToggle={() => onToggle('showAsSwitcher')}
+          toggled={state.showAsSwitcher} />
+        <Toggle
+          label="Show Label"
+          onToggle={() => onToggle('showLabel')}
+          toggled={state.showLabel} />
+
+        <MultiInputSelection label="Options" />
+      </Modal>
+    </>
+  )
+}
+
 const ObjectModule = () => {
-  const [visible, setVisible] = useState(false)
   return (
     <>
       <ClayPanel
@@ -18,41 +122,14 @@ const ObjectModule = () => {
         spritemap={spritemap}
       >
         <ClayPanel.Body>
-          <Scope path="formView">
-            <InputField
-              name="name"
-              label="Object Name"
-              type="localized"
-            />
-          </Scope>
-          <Button onClick={() => setVisible(!visible)}>Add Field</Button>
+          <LocalizedInput
+            name="name"
+            label="Object Name"
+            type="localized"
+          />
         </ClayPanel.Body>
       </ClayPanel>
-      <Modal visible={visible} setVisible={setVisible}>
-        <Scope path="formView">
-          <InputField
-            name="label"
-            label="Label"
-            type="localized"
-          />
-          <InputField
-            name="help"
-            label="Portal Language"
-            type="localized"
-          />
-          <InputField
-            name="predefinedValue"
-            label="Predefined Value"
-            type="localized"
-          />
-          <InputField
-            name="placeholder"
-            label="Placeholder"
-            type="localized"
-          />
-          <MultiSelect></MultiSelect>
-        </Scope>
-      </Modal>
+      <FieldModal></FieldModal>
     </>
   )
 }
