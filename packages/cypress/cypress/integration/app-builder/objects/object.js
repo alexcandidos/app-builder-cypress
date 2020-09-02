@@ -7,6 +7,7 @@ const pipelines = require('../../helpers/pipelines')
 const TableView = require('../table-view/table-view')
 const Language = require('../../portal/language')
 const App = require('../app/app')
+const Standalone = require('../standalone/standalone')
 
 class AppBuilderObject extends TestBase {
   constructor () {
@@ -46,42 +47,53 @@ class AppBuilderObject extends TestBase {
     const tableView = new TableView(pipeline)
     const formView = new FormView(pipeline)
     const portalLanguage = new Language(pipeline)
+    const standalone = new Standalone(pipeline)
 
     const { app: appConfig } = pipeline
 
-    // portalLanguage.normalizeLanguages()
+    portalLanguage.normalizeLanguages()
 
     describe('Run Portal on Instance', () => {
-      // it('Navigate to Object', () => {
-      //   cy.visit(this.constants.modules.object)
-      // })
+      it('open', () => {
+        cy.visit('http://localhost:8080/en/group/control_panel/manage?p_p_id=com_liferay_app_builder_web_internal_portlet_ObjectsPortlet&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&refererPlid=1&p_p_auth=M9bgGddi&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataDefinitionId=48157&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_mvcRenderCommandName=%2Fedit_form_view')
+      })
 
-      // it('Should delete all Objects', () => {
-      //   this.deleteAllObjects()
-      // })
+      it('Navigate to Object', () => {
+        cy.visit(this.constants.modules.object)
+      })
 
-      // it('should create an custom object and go to form view', () => {
-      //   this.createAnObject(pipeline.name)
-      // })
+      it('Should delete all Objects', () => {
+        this.deleteAllObjects()
+      })
 
-      // describe('Run FormView pipeline', () => {
-      //   formView.runPipeline()
-      // })
+      it('should create an custom object and go to form view', () => {
+        this.createAnObject(pipeline.name)
+      })
 
-      // describe('Run TableView pipeline', () => {
-      //   tableView.pipeline()
-      // })
+      describe('Run FormView pipeline', () => {
+        formView.runPipeline()
+      })
+
+      describe('Run TableView pipeline', () => {
+        tableView.pipeline()
+      })
 
       if (appConfig) {
         describe('Run App pipeline', () => {
           app.pipeline()
         })
+
+        if (false) {
+          describe('Run Standalone Pipeline', () => {
+            standalone.pipeline()
+          })
+        }
       }
     })
   }
 
   test () {
-    signIn.test()
+    // signIn.test()
 
     Object.keys(pipelines).forEach((key) => {
       const pipeline = pipelines[key]

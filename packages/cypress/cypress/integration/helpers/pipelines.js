@@ -1,6 +1,6 @@
 const { random: { boolean, number } } = require('faker')
 const constants = require('./constants')
-
+const { languages } = require('./constants')
 const defaultOptions = ['help', 'label', 'required', 'showLabel', 'repeatable']
 
 const types = [
@@ -69,6 +69,18 @@ const getRandomNumbers = (maxNumber) => {
   return arr.length ? arr : [1]
 }
 
+const getRandomLanguage = (many) => {
+  const languagesArr = Object.keys(languages)
+  const totalLanguages = languagesArr.length - 1
+  return [...new Array(many)].map(() => {
+    const [first, second] = [number(totalLanguages), number(totalLanguages)]
+    return {
+      defaultLanguageId: languages[languagesArr[first]].key,
+      languageId: languages[languagesArr[second]].key
+    }
+  })
+}
+
 const getConfig = (fieldType) => {
   const config = {}
   const totalOfOptions = fieldType.options.length
@@ -96,13 +108,18 @@ const fieldTypeGenerator = (fieldTypes = types) => {
   return newFieldTypes
 }
 
+const SCENARIO_ = {
+
+}
+
 const Scenarios = {
   SCENARIO_1: {
     app: {
       name: {
         en_US: 'School',
         es_ES: 'Iscola',
-        pt_BR: 'Escola'
+        pt_BR: 'Escola',
+        zh_CN: 'Escola em CHines'
       },
       newApp: true,
       options: {
@@ -125,69 +142,72 @@ const Scenarios = {
           },
           name: 'Text',
           type: 'text'
-        }
-        // {
-        //   config: {
-        //     help: 'Student Grade',
-        //     label: 'School Grade',
-        //     multiple: true,
-        //     options: ['First Grade', 'Second Grade', 'Third Grade'],
-        //     repeatable: true,
-        //     required: true
-        //   },
-        //   name: 'Select from List',
-        //   type: 'select'
-        // },
-        // {
-        //   config: {
-        //     help: 'Self Care',
-        //     label: 'Self Care',
-        //     options: ['First aid', 'Health Package', 'Playground'],
-        //     repeatable: true,
-        //     required: true
-        //   },
-        //   name: 'Single Selection',
-        //   type: 'radio'
-        // },
-        // {
-        //   config: {
-        //     help: 'Basic Toolkit',
-        //     inline: true,
-        //     label: 'Basic Toolkit',
-        //     options: ['Pencil', 'Pen', 'Eraser', 'Notebook'],
-        //     repeatable: true,
-        //     required: true
-        //   },
-        //   name: 'Multiple Selection',
-        //   type: 'checkbox_multiple'
-        // },
-        // {
-        //   config: {
-        //     help: 'Student Born Date',
-        //     label: 'Student Born',
-        //     repeatable: true,
-        //     required: true
-        //   },
-        //   name: 'Date',
-        //   type: 'date'
-        // },
-        // {
-        //   config: {
-        //     help: 'Student Age',
-        //     label: 'Student Age',
-        //     repeatable: true,
-        //     required: true
-        //   },
-        //   name: 'Numeric',
-        //   type: 'numeric'
-        // },
-        // { name: 'Fields Group' },
-        // { name: 'Upload', type: 'document_library' }
+        },
+        {
+          config: {
+            help: 'Student Grade',
+            label: 'School Grade',
+            // multiple: true,
+            options: ['First Grade', 'Second Grade', 'Third Grade'],
+            predefinedOptions: 'Second Grade',
+            showLabel: true,
+            // repeatable: true,
+            required: true
+          },
+          name: 'Select from List',
+          type: 'select'
+        },
+        {
+          config: {
+            help: 'Self Care',
+            label: 'Self Care',
+            options: ['First aid', 'Health Package', 'Playground'],
+            repeatable: true,
+            required: true
+          },
+          name: 'Single Selection',
+          type: 'radio'
+        },
+        {
+          config: {
+            help: 'Basic Toolkit',
+            inline: true,
+            label: 'Basic Toolkit',
+            options: ['Pencil', 'Pen', 'Eraser', 'Notebook'],
+            repeatable: true,
+            required: true
+          },
+          name: 'Multiple Selection',
+          type: 'checkbox_multiple'
+        },
+        {
+          config: {
+            help: 'Student Born Date',
+            label: 'Student Born',
+            repeatable: true,
+            required: true
+          },
+          name: 'Date',
+          type: 'date'
+        },
+        {
+          config: {
+            help: 'Student Age',
+            label: 'Student Age',
+            repeatable: true,
+            required: true
+          },
+          name: 'Numeric',
+          type: 'numeric'
+        },
+        { name: 'Fields Group' },
+        { name: 'Upload', type: 'document_library' }
       ],
       name: {
         en_US: 'School',
         es_ES: 'Iscola',
-        pt_BR: 'Escola'
+        pt_BR: 'Escola',
+        zh_CN: 'Escola em CHines'
       }
     },
     name: 'School',
@@ -196,15 +216,16 @@ const Scenarios = {
       newObject: true
     },
     portal: {
-      defaultLanguageId: constants.languages.pt_BR.key,
-      languageId: constants.languages.pt_BR.key,
-      repeatsOn: []
+      defaultLanguageId: constants.languages.en_US.key,
+      languageId: constants.languages.en_US.key,
+      repeatsOn: getRandomLanguage(5)
     },
     tableView: {
       name: {
         en_US: 'School',
         es_ES: 'Iscola',
-        pt_BR: 'Escola'
+        pt_BR: 'Escola',
+        zh_CN: 'Escola em CHines'
       },
       newTableView: true
     }

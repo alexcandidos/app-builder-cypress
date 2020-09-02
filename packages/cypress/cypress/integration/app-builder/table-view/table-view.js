@@ -7,7 +7,7 @@ class TableView extends TestBase {
   }
 
   pipeline () {
-    const fieldTypes = this.config.formView.fieldTypes
+    const fieldTypes = this.config.formView.fieldTypes.filter(({ config, type }) => type && config)
     it('Should open TableView Tab', () => {
       this.selectors.changeObjectTab(1)
     })
@@ -43,7 +43,7 @@ class TableView extends TestBase {
         cy.get('.tab-content .field-type').should('have.length', fieldTypes.length)
       })
 
-      fieldTypes.filter(({ config, type }) => type && config).forEach(({ config: { label } }) => {
+      fieldTypes.forEach(({ config: { label } }) => {
         describe(`Should do action on [${label}] column created on FormView`, () => {
           const findByLabel = () => cy.get('.list-group-title span').contains(label)
           it(`Column [${label}] matches with the FormView item label`, () => {

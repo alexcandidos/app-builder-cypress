@@ -24,6 +24,10 @@ class TestBase {
     })
   }
 
+  getLocalizedValue (name) {
+    return name[this.getLanguageId()] || name[this.getDefaultLanguageId()]
+  }
+
   getLanguageId () {
     return this.pipelineConfig.portal.languageId || 'en_US'
   }
@@ -46,6 +50,10 @@ class TestBase {
       cy.get('.localizable-dropdown-ul')
         .find(`.lexicon-icon-${lang}`)
         .click({ force })
+    }
+
+    if (!name[this.getDefaultLanguageId()]) {
+      name[this.getDefaultLanguageId()] = 'keven'
     }
 
     if (typeof name === 'object') {

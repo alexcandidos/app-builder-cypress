@@ -24,8 +24,10 @@ class FormView extends TestBase {
         inline,
         label,
         multiple,
+        options = [],
         placeholder,
         predefinedValue,
+        predefinedOptions,
         repeatable,
         required,
         showAsSwitcher,
@@ -40,6 +42,7 @@ class FormView extends TestBase {
       ddmInline,
       ddmLabel,
       ddmMultiple,
+      ddmOptions,
       ddmPlaceholder,
       ddmPredefinedValue,
       ddmRepeatable,
@@ -50,7 +53,7 @@ class FormView extends TestBase {
       ddmTooltip
     } = this.selectors
 
-    const withAdvancedField = predefinedValue || showLabel || repeatable || inline
+    const withAdvancedField = predefinedValue || showLabel || repeatable || inline || predefinedOptions
 
     const changeTab = (index) => {
       it('Changing tab', () => {
@@ -114,6 +117,17 @@ class FormView extends TestBase {
       })
     }
 
+    if (options && options.length) {
+      it('Typing [options]', () => {
+        cy.get(ddmOptions).within(() => {
+          cy.get('.ddm-field-options').should('have.length', 2)
+          options.forEach((option, index) => {
+            cy.get('.ddm-field-options').eq(index).find('.form-group input').eq(0).clear().type(option)
+          })
+        })
+      })
+    }
+
     if (required) {
       setChecked(ddmRequired, 'required')
     }
@@ -142,6 +156,13 @@ class FormView extends TestBase {
 
       if (inline) {
         setChecked(ddmInline, 'inline')
+      }
+
+      if (predefinedOptions) {
+        it(`Select the [predefinedValue] as ${predefinedOptions}`, () => {
+          cy.get(`${ddmPredefinedValue} .select-field-trigger`).click()
+          cy.get(`.dropdown-menu.show button[label="${predefinedOptions}"]`).click()
+        })
       }
     }
   }
@@ -178,8 +199,8 @@ class FormView extends TestBase {
               cy.get('button').eq(index).click()
             })
 
-            // cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
-            // cy.get('div[data-field-name="label"] input').should('have.value', field)
+            cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
+            cy.get('div[data-field-name="label"] input').should('have.value', field)
           })
         })
 
@@ -196,13 +217,13 @@ class FormView extends TestBase {
           cy.get('.sidebar-body .custom-object-field').should('have.length', 0)
         })
 
-        it(`Should search for ${firstFieldType.name} and found matching value`, () => {
-          cy.get('.custom-object-sidebar-header input')
-            .clear()
-            .type(firstFieldType.name)
-            .should('have.value', firstFieldType.name)
-          cy.get('.sidebar-body .custom-object-field').should('have.length', 1)
-        })
+        // it(`Should search for ${firstFieldType.name} and found matching value`, () => {
+        //   cy.get('.custom-object-sidebar-header input')
+        //     .clear()
+        //     .type(firstFieldType.name)
+        //     .should('have.value', firstFieldType.name)
+        //   cy.get('.sidebar-body .custom-object-field').should('have.length', 1)
+        // })
 
         it('Should back to list FieldTypes', () => {
           cy.get('.custom-object-sidebar-header').within(() => {
@@ -221,7 +242,9 @@ class FormView extends TestBase {
     describe('Sidebar Right', () => {
       if (this.config.object.newObject) {
         it('Search for Liferay as Field and Found Nothing', () => {
-          cy.get('.sidebar-header input')
+          cy
+            .wait(1000)
+            .get('.sidebar-header input')
             .as('search-input')
             .should('be.empty')
             .type('Liferay')
@@ -249,29 +272,27 @@ class FormView extends TestBase {
   }
 
   runPipeline () {
-    describe('AppBuilder - FormView', () => {
-      const name = this.config.formView.name
-      beforeEach(() => {
-        cy.wait(100)
+    const name = this.config.formView.name
+    beforeEach(() => {
+      cy.wait(100)
+    })
+
+    this.sidebarLeft()
+    this.sidebarRight()
+
+    describe('Fill FormView title and save it', () => {
+      it('Set title', () => {
+        this.managementTitle(name, this.config.portal)
+      })
+    })
+
+    describe('Submit', () => {
+      it('Submit FormView', () => {
+        cy.get('.app-builder-upper-toolbar button.btn-primary').click()
       })
 
-      // this.sidebarLeft()
-      this.sidebarRight()
-
-      describe('Fill FormView title and save it', () => {
-        it('Set title', () => {
-          this.managementTitle(name, this.config.portal)
-        })
-      })
-
-      describe('Submit', () => {
-        it('Submit FormView', () => {
-          cy.get('.app-builder-upper-toolbar button.btn-primary').click()
-        })
-
-        it('Validate ListView', () => {
-          this.validateListView(name)
-        })
+      it('Validate ListView', () => {
+        this.validateListView(name)
       })
     })
   }

@@ -2,7 +2,6 @@
     "viewportWidth": 1378,
     "viewportHeight": 820,
     "testFiles": "**/*.spec.js",
-    "reporter": "mochawesome",
     "experimentalNetworkStubbing": true,
     "reporterOptions": {
         "reportDir": "cypress/results",

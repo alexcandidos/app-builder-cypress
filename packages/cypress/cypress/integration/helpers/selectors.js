@@ -11,6 +11,7 @@ module.exports = {
   ddmInline: '[data-field-name="inline"]',
   ddmLabel: '[data-field-name="label"]',
   ddmMultiple: '[data-field-name="multiple"]',
+  ddmOptions: '[data-field-name="options"]',
   ddmPlaceholder: '[data-field-name="placeholder"]',
   ddmPredefinedValue: '[data-field-name="predefinedValue"]',
   ddmRepeatable: '[data-field-name="repeatable"]',
@@ -21,5 +22,6 @@ module.exports = {
   ddmTooltip: '[data-field-name="tooltip"]',
   ddmVisibilityExpression: '[data-field-name="visibilityExpression"]',
   instanceLanguageSelect: '#_com_liferay_configuration_admin_web_portlet_InstanceSettingsPortlet_languageId',
+  newItem: '.nav-item button.btn-primary',
   primaryButton: 'button.btn.btn-primary'
 }

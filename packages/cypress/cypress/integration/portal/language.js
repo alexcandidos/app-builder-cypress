@@ -1,4 +1,4 @@
-const TestBase = require('../test.base');
+const TestBase = require('../test.base')
 
 class Language extends TestBase {
   constructor (config = { portal: { defaultLanguageId: undefined, languageId: undefined } }) {
@@ -33,14 +33,14 @@ class Language extends TestBase {
         cy.visit(accountSettings)
       })
 
-      it('Change instance language', () => {
+      it('Change Portal Language', () => {
         cy
           .get(this.selectors.accountSettingsLanguageSelect)
           .select(languageId)
           .should('have.value', languageId)
       })
 
-      it(`Save instance language with ${defaultLanguageId}`, () => {
+      it(`Save Portal Language with ${languageId}`, () => {
         cy.get('.btn-primary').click()
       })
     })
