@@ -51,44 +51,45 @@ class AppBuilderObject extends TestBase {
 
     const { app: appConfig } = pipeline
 
-    portalLanguage.normalizeLanguages()
+    // portalLanguage.normalizeLanguages()
 
     describe('Run Portal on Instance', () => {
-      it('open', () => {
-        cy.visit('http://localhost:8080/en/group/control_panel/manage?p_p_id=com_liferay_app_builder_web_internal_portlet_ObjectsPortlet&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&refererPlid=1&p_p_auth=M9bgGddi&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataDefinitionId=48157&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_mvcRenderCommandName=%2Fedit_form_view')
+      it('Open', () => {
+        cy.visit('http://localhost:8080/group/guest/~/control_panel/manage?p_p_id=com_liferay_app_builder_web_internal_portlet_ObjectsPortlet&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&p_p_auth=zPQeWAAc&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataDefinitionId=38486&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_mvcRenderCommandName=%2Fedit_form_view&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_newCustomObject=true')
       })
+      // it('Navigate to Object', () => {
+      //   cy.visit(this.constants.modules.object)
+      // })
 
-      it('Navigate to Object', () => {
-        cy.visit(this.constants.modules.object)
-      })
+      // it('Should delete all Objects', () => {
+      //   this.deleteAllObjects()
+      // })
 
-      it('Should delete all Objects', () => {
-        this.deleteAllObjects()
-      })
+      // it('should create an custom object and go to form view', () => {
+      //   this.createAnObject(pipeline.name)
+      // })
 
-      it('should create an custom object and go to form view', () => {
-        this.createAnObject(pipeline.name)
-      })
-
-      describe('Run FormView pipeline', () => {
-        formView.runPipeline()
-      })
-
-      describe('Run TableView pipeline', () => {
-        tableView.pipeline()
-      })
-
-      if (appConfig) {
-        describe('Run App pipeline', () => {
-          app.pipeline()
+      if (pipeline.formView) {
+        describe('Run FormView pipeline', () => {
+          formView.runPipeline()
         })
-
-        if (false) {
-          describe('Run Standalone Pipeline', () => {
-            standalone.pipeline()
-          })
-        }
       }
+
+      // if (pipeline.tableView) {
+      //   describe('Run TableView pipeline', () => {
+      //     tableView.pipeline()
+      //   })
+      // }
+
+      // if (appConfig) {
+      //   describe('Run App pipeline', () => {
+      //     app.pipeline()
+      //   })
+
+      //   describe('Run Standalone Pipeline', () => {
+      //     standalone.pipeline()
+      //   })
+      // }
     })
   }
 

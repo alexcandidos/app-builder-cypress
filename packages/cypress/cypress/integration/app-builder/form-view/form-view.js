@@ -8,6 +8,73 @@ class FormView extends TestBase {
     this.config = config
   }
 
+  setTitle (value) {
+    it('Put the Title', () => {
+      cy.get('.app-builder-root').within(() => {
+        cy.get('.tbar-item.tbar-item-expand input').type(value)
+      })
+    })
+  }
+
+  _composeFields (parent, addField, languageId, value, fatherSelector = '') {
+    let doAction = true
+    if (languageId && value) {
+      const lang = this.normalizeLang(languageId)
+      describe('Language', () => {
+        this.selectLanguage(lang)
+        this.setTitle(value)
+      })
+    } else {
+      if (!fatherSelector) {
+        this.setTitle(this.getLocalizedValue(parent.name))
+      }
+      doAction = false
+    }
+
+    parent.fieldTypes.filter(({ type }) => type).map((field, index) => {
+      const isScrollDown = index >= 2
+      const { name, type } = field
+      describe(`Should handle ${name} Field and Fill Values`, () => {
+        if (addField) {
+          it('add field on DataLayout', () => {
+            cy.get(`[data-field-type-name="${type}"]`).dblclick()
+          })
+        } else {
+          it('Click on Field on Layout', () => {
+            cy.get(`.ddm-form-builder-wrapper [data-field-name="${field.config.id}"]`).eq(0).click()
+          })
+        }
+
+        it(`Scroll ${isScrollDown ? 'Down' : 'Up'}`, () => {
+          cy.scrollTo(isScrollDown ? 'bottom' : 'top')
+        })
+
+        this._fieldCompose(field, {
+          doAction,
+          fatherSelector,
+          languageId
+        })
+
+        it('Dispose', () => {
+          cy.get(`${fatherSelector} .sidebar-header button`).eq(0).click()
+        })
+      })
+    })
+  }
+
+  getLocalizedConfig (config, lang) {
+    const newConfigs = {
+      ...config
+    }
+    Object.keys(config).forEach((key) => {
+      const value = config[key]
+      if (typeof value === 'object') {
+        newConfigs[key] = this.getLocalizedPrefenceValue(value, lang)
+      }
+    })
+    return newConfigs
+  }
+
   _deleteAllFieldsFromObject () {
     cy.get('.custom-object-field').each(() => {
       cy.get('.field-type-remove-icon button').eq(0).click({ force: true })
@@ -16,26 +83,22 @@ class FormView extends TestBase {
     })
   }
 
-  _fieldCompose (field) {
+  _fieldCompose (field, { doAction, fatherSelector, languageId }) {
     const {
-      config: {
-        displayType,
-        help,
-        inline,
-        label,
-        multiple,
-        options = [],
-        placeholder,
-        predefinedValue,
-        predefinedOptions,
-        repeatable,
-        required,
-        showAsSwitcher,
-        showLabel = true,
-        tooltip
-      } = {},
-      name: fieldName
-    } = field
+      displayType,
+      help,
+      inline,
+      label,
+      multiple,
+      options = [],
+      placeholder,
+      predefinedValue,
+      predefinedOptions,
+      repeatable,
+      required,
+      showAsSwitcher,
+      showLabel = true
+    } = this.getLocalizedConfig(field.config, languageId)
 
     const {
       ddmDisplayStyle,
@@ -49,11 +112,14 @@ class FormView extends TestBase {
       ddmRequired,
       ddmShowAsSwitcher,
       ddmShowLabel,
-      ddmTip,
-      ddmTooltip
+      ddmTip
     } = this.selectors
 
     const withAdvancedField = predefinedValue || showLabel || repeatable || inline || predefinedOptions
+
+    const applySelector = (selector) => {
+      return fatherSelector ? `${fatherSelector} ${selector}` : selector
+    }
 
     const changeTab = (index) => {
       it('Changing tab', () => {
@@ -63,7 +129,8 @@ class FormView extends TestBase {
 
     const setInputValue = (selector, value, id) => {
       it(`Typing [${value}] on [${id}]`, () => {
-        cy.get(`${selector} input`)
+        cy.get(`${applySelector(selector)} input`).eq(0)
+          .clear()
           .should('not.have.value')
           .type(value)
           .should('have.value', value)
@@ -71,21 +138,25 @@ class FormView extends TestBase {
     }
 
     const setChecked = (selector, id) => {
-      it(`Mark [${id}] as [checked]`, () => {
-        cy.get(`${selector} input`)
-          .should('not.be.checked')
-          .check()
-          .should('be.checked')
-      })
+      if (doAction) {
+        it(`Mark [${id}] as [checked]`, () => {
+          cy.get(`${applySelector(selector)} input`)
+            .should('not.be.checked')
+            .check()
+            .should('be.checked')
+        })
+      }
     }
 
     const setUnchecked = (selector, id) => {
-      it(`Mark [${id}] as [unchecked]`, () => {
-        cy.get(`${selector} input`)
-          .should('be.checked')
-          .uncheck()
-          .should('not.be.checked')
-      })
+      if (doAction) {
+        it(`Mark [${id}] as [unchecked]`, () => {
+          cy.get(`${applySelector(selector)} input`)
+            .should('be.checked')
+            .uncheck()
+            .should('not.be.checked')
+        })
+      }
     }
 
     if (label) {
@@ -105,7 +176,7 @@ class FormView extends TestBase {
       setInputValue(ddmTip, help, 'help')
     }
 
-    if (displayType === 'multiple') {
+    if (doAction && displayType === 'multiple') {
       it('Marking [multiple] as [checked]', () => {
         cy.get(`${ddmDisplayStyle}`).within(() => {
           cy.get('input')
@@ -138,6 +209,13 @@ class FormView extends TestBase {
 
     if (withAdvancedField) {
       changeTab(1)
+
+      it('Get the Name', () => {
+        cy.get(`${this.selectors.ddmName} input`).then((doc) => {
+          field.config.id = doc.val()
+        })
+      })
+
       if (predefinedValue) {
         setInputValue(ddmPredefinedValue, predefinedValue, 'predefinedValue')
       }
@@ -238,13 +316,14 @@ class FormView extends TestBase {
     })
   }
 
-  sidebarRight () {
+  sidebarRight (parent = this.config.formView, isFieldSet) {
+    const fatherSelector = isFieldSet ? '.fieldset-modal' : ''
     describe('Sidebar Right', () => {
       if (this.config.object.newObject) {
         it('Search for Liferay as Field and Found Nothing', () => {
           cy
             .wait(1000)
-            .get('.sidebar-header input')
+            .get(`${fatherSelector} .sidebar-header input `)
             .as('search-input')
             .should('be.empty')
             .type('Liferay')
@@ -252,21 +331,7 @@ class FormView extends TestBase {
           cy.get('.tab-pane .field-type').should('not.exist')
           cy.get('@search-input').clear()
         })
-
-        this.config.formView.fieldTypes.filter(({ type }) => type).map((field) => {
-          const { name, type } = field
-          describe(`Add ${name} Field and Fill Values`, () => {
-            it('add field on DataLayout', () => {
-              cy.get(`[data-field-type-name="${type}"]`).dblclick()
-            })
-
-            this._fieldCompose(field)
-
-            it('Dispose', () => {
-              cy.get('.sidebar-header button').eq(0).click()
-            })
-          })
-        })
+        this._composeFields(parent, true, null, null, fatherSelector)
       }
     })
   }
@@ -277,24 +342,45 @@ class FormView extends TestBase {
       cy.wait(100)
     })
 
-    this.sidebarLeft()
+    // this.sidebarLeft()
     this.sidebarRight()
+    // this.managementTitle(name, this.config.portal)
 
-    describe('Fill FormView title and save it', () => {
-      it('Set title', () => {
-        this.managementTitle(name, this.config.portal)
-      })
-    })
+    const fieldSet = this.config.fieldset
+    if (fieldSet) {
+      describe('Create FieldSet', () => {
+        it('Open FieldSet section', () => {
+          cy.get('.nav-underline .nav-item').eq(1).click()
+          this.emptyState()
+          cy.get('.add-fieldset').click()
+        })
 
-    describe('Submit', () => {
-      it('Submit FormView', () => {
-        cy.get('.app-builder-upper-toolbar button.btn-primary').click()
-      })
+        it('Put the title', () => {
+          cy.get('.fieldset-modal .modal-header input').type(fieldSet.name)
+        })
 
-      it('Validate ListView', () => {
-        this.validateListView(name)
+        this.sidebarRight(fieldSet, true)
       })
-    })
+    }
+
+    // describe('Should set title and Form in multiple languages', () => {
+    //   Object.keys(name).forEach((languageId) => {
+    //     if (languageId !== this.getDefaultLanguageId()) {
+    //       const value = this.getLocalizedPrefenceValue(name, languageId)
+    //       this._composeFields(this.config.formView, false, languageId, value)
+    //     }
+    //   })
+    // })
+
+    // describe('Submit', () => {
+    //   it('Submit FormView', () => {
+    //     cy.get('.app-builder-upper-toolbar button.btn-primary').click()
+    //   })
+
+    //   it('Validate ListView', () => {
+    //     this.validateListView(name)
+    //   })
+    // })
   }
 
   run () {

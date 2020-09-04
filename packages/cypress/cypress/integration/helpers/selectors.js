@@ -11,6 +11,7 @@ module.exports = {
   ddmInline: '[data-field-name="inline"]',
   ddmLabel: '[data-field-name="label"]',
   ddmMultiple: '[data-field-name="multiple"]',
+  ddmName: '[data-field-name="name"]',
   ddmOptions: '[data-field-name="options"]',
   ddmPlaceholder: '[data-field-name="placeholder"]',
   ddmPredefinedValue: '[data-field-name="predefinedValue"]',

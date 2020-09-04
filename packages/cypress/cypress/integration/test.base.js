@@ -24,8 +24,31 @@ class TestBase {
     })
   }
 
-  getLocalizedValue (name) {
-    return name[this.getLanguageId()] || name[this.getDefaultLanguageId()]
+  selectLanguage (lang, force = false) {
+    it('Select language', () => {
+      cy.get('.app-builder-root').within(() => {
+        cy.get('.localizable-dropdown button').click()
+      })
+
+      cy.get('.localizable-dropdown-ul')
+        .find(`.lexicon-icon-${lang}`)
+        .click({ force })
+    })
+  }
+
+  normalizeLang (lang) {
+    return lang.replace('_', '-').toLowerCase()
+  }
+
+  getLocalizedValue (name, untitled = '') {
+    return name[this.getLanguageId()] || name[this.getDefaultLanguageId()] || untitled
+  }
+
+  getLocalizedPrefenceValue (name, defaultLanguageId) {
+    if (name[defaultLanguageId]) {
+      return name[defaultLanguageId]
+    }
+    return this.getLocalizedValue(name)
   }
 
   getLanguageId () {
@@ -53,7 +76,7 @@ class TestBase {
     }
 
     if (!name[this.getDefaultLanguageId()]) {
-      name[this.getDefaultLanguageId()] = 'keven'
+      name[this.getDefaultLanguageId()] = 'Untitled'
     }
 
     if (typeof name === 'object') {
@@ -72,8 +95,7 @@ class TestBase {
   }
 
   validateListView (name) {
-    const { defaultLanguageId, languageId } = this.pipelineConfig.portal
-    const localizedValue = name[languageId] || name[defaultLanguageId]
+    const localizedValue = this.getLocalizedValue(name)
     cy.wait(1500)
 
     cy.get('form input')

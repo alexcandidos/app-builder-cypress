@@ -108,11 +108,296 @@ const fieldTypeGenerator = (fieldTypes = types) => {
   return newFieldTypes
 }
 
-const SCENARIO_ = {
+const SCENARIO_COMMERCE = {
+  app: {
+    name: {
+      en_US: 'Bank Account',
+      es_ES: 'Cuenta bancaria',
+      pt_BR: 'Conta Bancária'
+    },
+    newApp: true,
+    options: {
+      product: false,
+      standalone: true,
+      widget: true
+    }
+  },
+  fieldset: {
+    fieldTypes: [
+      {
+        config: {
+          help: {
+            en_US: 'In what company do you work now?',
+            es_ES: '¿En qué empresa trabajas ahora?',
+            pt_BR: 'Em que empresa trabalha agora?'
+          },
+          label: {
+            en_US: 'Company name',
+            es_ES: 'Nombre de empresa',
+            pt_BR: 'Nome da empresa'
+          },
+          placeholder: {
+            en_US: 'In what company do you work now?',
+            es_ES: '¿En qué empresa trabajas ahora?',
+            pt_BR: 'Em que empresa trabalha agora?'
+          },
+          predefinedValue: {
+            en_US: 'In what company do you work now?',
+            es_ES: '¿En qué empresa trabajas ahora?',
+            pt_BR: 'Em que empresa trabalha agora?'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Account name',
+            es_ES: 'Nombre de conta',
+            pt_BR: 'Nome da conta'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Transaction type',
+            es_ES: 'Tipo de transacione',
+            pt_BR: 'Tipo de transação'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Currency Name',
+            es_ES: 'Nombre de moeda',
+            pt_BR: 'Nome da moeda'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Credit Card Number',
+            es_ES: 'Nombre del cartão',
+            pt_BR: 'Número do cartão de crédito'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Credit Card CVV',
+            es_ES: 'Numero del cartão',
+            pt_BR: 'CVV Cartão de Crédito'
+          }
+        },
+        name: 'Numeric',
+        type: 'numeric'
+      },
+      {
+        config: {
+          displayType: 'multiple',
+          label: {
+            en_US: 'Transaction Description',
+            es_ES: 'Numero del cartão',
+            pt_BR: 'Descrição da transação'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      }
+    ],
+    name: 'Bank Account',
+    newFieldSet: true
+  },
+  formView: {
+    fieldTypes: [],
+    name: {
+      en_US: 'Bank Account',
+      es_ES: 'Cuenta bancaria',
+      pt_BR: 'Conta Bancária'
+    }
+  },
+  name: 'School',
+  object: {
+    name: 'School',
+    newObject: true
+  },
+  portal: {
+    defaultLanguageId: constants.languages.en_US.key,
+    languageId: constants.languages.en_US.key,
+    repeatsOn: {
+      defaultLanguageId: constants.languages.en_US.key,
+      languageId: constants.languages.en_US.key
+    }
+    // repeatsOn: getRandomLanguage(1)
+  },
+  tableView: {
+    name: {
+      en_US: 'Bank Account',
+      es_ES: 'Cuenta bancaria',
+      pt_BR: 'Conta Bancária'
+    },
+    newTableView: true
+  }
+}
 
+const SCENARIO_COMMERCE1 = {
+  app: {
+    name: {
+      en_US: 'Bank Account',
+      es_ES: 'Cuenta bancaria',
+      pt_BR: 'Conta Bancária'
+    },
+    newApp: true,
+    options: {
+      product: false,
+      standalone: true,
+      widget: true
+    }
+  },
+  formView: {
+    fieldTypes: [
+      {
+        config: {
+          help: {
+            en_US: 'In what company do you work now?',
+            es_ES: '¿En qué empresa trabajas ahora?',
+            pt_BR: 'Em que empresa trabalha agora?'
+          },
+          label: {
+            en_US: 'Company name',
+            es_ES: 'Nombre de empresa',
+            pt_BR: 'Nome da empresa'
+          },
+          placeholder: {
+            en_US: 'In what company do you work now?',
+            es_ES: '¿En qué empresa trabajas ahora?',
+            pt_BR: 'Em que empresa trabalha agora?'
+          },
+          predefinedValue: {
+            en_US: 'In what company do you work now?',
+            es_ES: '¿En qué empresa trabajas ahora?',
+            pt_BR: 'Em que empresa trabalha agora?'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Account name',
+            es_ES: 'Nombre de conta',
+            pt_BR: 'Nome da conta'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Transaction type',
+            es_ES: 'Tipo de transacione',
+            pt_BR: 'Tipo de transação'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Currency Name',
+            es_ES: 'Nombre de moeda',
+            pt_BR: 'Nome da moeda'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Credit Card Number',
+            es_ES: 'Nombre del cartão',
+            pt_BR: 'Número do cartão de crédito'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      },
+      {
+        config: {
+          label: {
+            en_US: 'Credit Card CVV',
+            es_ES: 'Numero del cartão',
+            pt_BR: 'CVV Cartão de Crédito'
+          }
+        },
+        name: 'Numeric',
+        type: 'numeric'
+      },
+      {
+        config: {
+          displayType: 'multiple',
+          label: {
+            en_US: 'Transaction Description',
+            es_ES: 'Numero del cartão',
+            pt_BR: 'Descrição da transação'
+          }
+        },
+        name: 'Text',
+        type: 'text'
+      }
+    ],
+    name: {
+      en_US: 'Bank Account',
+      es_ES: 'Cuenta bancaria',
+      pt_BR: 'Conta Bancária'
+    }
+  },
+  name: 'School',
+  object: {
+    name: 'School',
+    newObject: true
+  },
+  portal: {
+    defaultLanguageId: constants.languages.en_US.key,
+    languageId: constants.languages.en_US.key,
+    repeatsOn: {
+      defaultLanguageId: constants.languages.en_US.key,
+      languageId: constants.languages.en_US.key
+    }
+    // repeatsOn: getRandomLanguage(1)
+  },
+  tableView: {
+    name: {
+      en_US: 'Bank Account',
+      es_ES: 'Cuenta bancaria',
+      pt_BR: 'Conta Bancária'
+    },
+    newTableView: true
+  }
 }
 
 const Scenarios = {
+  SCENARIO_COMMERCE
+}
+
+const Scenariosa = {
   SCENARIO_1: {
     app: {
       name: {
@@ -218,7 +503,11 @@ const Scenarios = {
     portal: {
       defaultLanguageId: constants.languages.en_US.key,
       languageId: constants.languages.en_US.key,
-      repeatsOn: getRandomLanguage(5)
+      repeatsOn: {
+        defaultLanguageId: constants.languages.en_US.key,
+        languageId: constants.languages.en_US.key
+      }
+      // repeatsOn: getRandomLanguage(1)
     },
     tableView: {
       name: {
