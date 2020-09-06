@@ -38,6 +38,7 @@ module.exports = {
     'simple-import-sort/sort': 'error',
     'sort-destructure-keys/sort-destructure-keys': [2, { caseSensitive: false }],
     'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false, minKeys: 2 }],
+    "react/prop-types": 0,
     "react/jsx-filename-extension": [
       "error",
       {
