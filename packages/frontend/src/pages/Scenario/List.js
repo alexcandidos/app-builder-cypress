@@ -8,7 +8,9 @@ const List = ({ history }) => {
     <div>
       <ListView addButton={() => {
         history.push('/scenario')
-      }}></ListView>
+      }}>
+
+      </ListView>
     </div>
   )
 }

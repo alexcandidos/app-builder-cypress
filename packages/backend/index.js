@@ -2,6 +2,12 @@ const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./src/router')
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/liferay-cypress', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 const PORT = process.env.PORT || 3333;
 const app = express()

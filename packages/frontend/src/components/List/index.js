@@ -3,7 +3,8 @@ import { ClayPaginationBarWithBasicItems } from '@clayui/pagination-bar'
 import React from 'react'
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
-export default ({
+const List = ({
+  items,
   selectedMap,
   setSelectedMap,
   sortAsc,
@@ -12,48 +13,33 @@ export default ({
   const [activePage, setActivePage] = React.useState(1)
   const [delta, setDelta] = React.useState(10)
 
-  const dropdownActions = [
-    {
-      label: 'clickable',
-      onClick: () => {
-        alert('you clicked!')
-      }
-    },
-    {
-      type: 'divider'
-    },
-    {
-      href: '#',
-      label: 'linkable'
-    }
-  ]
-
-  const startingIndex = (activePage - 1) * delta
-
-  const items = Array(delta)
-    .fill(0)
-    .map((item, i) => {
-      const index = sortAsc
-        ? i + startingIndex
-        : totalItems - startingIndex - i
-
-      return {
-        classPK: `${index}`,
-        description: `classPK is ${index}`,
-        dropdownActions,
+  const listItems = items.map(({ _id }) => ({
+    _id,
+    description: 'Abcdef',
+    dropdownActions: [
+      {
+        label: 'Edit',
+        onClick: () => {
+          console.log(_id)
+          alert('you clicked!')
+        }
+      },
+      {
         href: '#',
-        title: `${index}`
+        label: 'Remove'
       }
-    })
+    ],
+    title: 'Oi!'
+  }))
 
   return (
-    <div className="container" style={{ paddingTop: 8 }}>
+    <div className="container" style={{ paddingTop: 16 }}>
       <ClayListWithItems
-        itemIdentifier="classPK"
+        itemIdentifier="_id"
         items={[
           {
-            header: 'List of Items',
-            items
+            header: 'List of Scenarios',
+            items: listItems
           }
         ]}
         onSelectedItemsChange={setSelectedMap}
@@ -67,8 +53,10 @@ export default ({
         onDeltaChange={setDelta}
         onPageChange={setActivePage}
         spritemap={spritemap}
-        totalItems={totalItems}
+        totalItems={10}
       />
     </div>
   )
 }
+
+export default List

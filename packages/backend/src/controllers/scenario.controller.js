@@ -1,8 +1,13 @@
+const Scenario = require('../models/scenario.model')
+
 module.exports = {
-    index(req, res) {
-        res.send({message: 'Hello'})
+   async index(req, res) {
+        const data = await Scenario.find()
+        res.send({data})
     },
-    store(req, res) {
-        
+    async store(req, res) {
+        const {scenario} = req.body;
+        const data = await Scenario.create(scenario);
+        res.send(data);
     }
 }
