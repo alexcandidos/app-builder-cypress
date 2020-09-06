@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
-import { Select } from '../../../components/Input'
+import AppContext, { actions } from '../../../AppContext'
+import { Input, Select } from '../../../components/Input'
 
 const options = [{
   label: 'localhost:8080',
@@ -16,9 +17,32 @@ const options = [{
 }]
 
 export default function StepEnvironment () {
+  const [{ scenario: { environment } }, dispatch] = useContext(AppContext)
+  const { customEndpoint, endpoint } = environment
+  const onChange = ({ target: { name, value } }) => {
+    dispatch({
+      payload: {
+        ...environment,
+        [name]: value
+      },
+      type: actions.SYNC_ENVIRONMENT
+    })
+  }
+
   return (
-    <div>
-      <Select name="endpoint" label="Endpoint" options={options}></Select>
-    </div>
+    <>
+      <Select
+        defaultValue={endpoint}
+        onChange={onChange}
+        name="endpoint"
+        label="Endpoint"
+        options={options} />
+      {endpoint === 'other' &&
+        <Input
+          defaultValue={customEndpoint}
+          label="Custom Endpoint"
+          onChange={onChange}
+          name="customEndpoint" />}
+    </>
   )
 }

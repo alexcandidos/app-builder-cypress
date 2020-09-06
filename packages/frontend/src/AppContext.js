@@ -1,7 +1,7 @@
 import { createContext } from 'react'
 
 import * as actions from './actions'
-const { ADD_FIELD_TYPE, SYNC_APP, SYNC_FORM_VIEW, SYNC_KEY, SYNC_OBJECT, SYNC_TABLE_VIEW } = actions
+const { ADD_FIELD_TYPE, SYNC_APP, SYNC_ENVIRONMENT, SYNC_FORM_VIEW, SYNC_KEY, SYNC_OBJECT, SYNC_TABLE_VIEW } = actions
 
 const AppContext = createContext()
 
@@ -14,6 +14,9 @@ const initialState = {
         widget: false
       },
       name: {}
+    },
+    environment: {
+      endpoint: ''
     },
     formView: {
       fieldTypes: [
@@ -86,6 +89,18 @@ const createReducer = () => {
           scenario: {
             ...state.scenario,
             tableView: {
+              ...action.payload
+            }
+          }
+        }
+      }
+
+      case SYNC_ENVIRONMENT: {
+        return {
+          ...state,
+          scenario: {
+            ...state.scenario,
+            environment: {
               ...action.payload
             }
           }

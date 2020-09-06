@@ -1,6 +1,8 @@
 import ClayButton from '@clayui/button'
 import React, { useContext, useState } from 'react'
+import { toast } from 'react-toastify'
 
+import axios from '../../api'
 import AppContext from '../../AppContext'
 import FormContainer from '../../components/FormContainer'
 import MultiStep from '../../components/MultiStep'
@@ -47,8 +49,14 @@ const Scenario = () => {
     }
   ]
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
+    try {
+      await axios.post('/scenario', state)
+      toast.success('Scenario created with Success')
+    } catch (e) {
+      toast.error('Error on save Scenario')
+    }
   }
 
   const Footer = () => (
@@ -59,7 +67,7 @@ const Scenario = () => {
         </ClayButton>
       </div>}
       <div className="btn-group-item">
-        {step === 5 ? <ClayButton onClick={() => console.log(state)} >
+        {step === 5 ? <ClayButton onClick={onSubmit} >
           {'Deploy'}
         </ClayButton> : <ClayButton onClick={() => setStep(step + 1)} >
           {'Next'}

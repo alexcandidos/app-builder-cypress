@@ -77,7 +77,7 @@ const Select = ({ label, options = [], ...props }) => {
       <ClaySelectWithOption
         {...props}
         aria-label="Select Label"
-        options={options}></ClaySelectWithOption>
+        options={options} />
     </InputGroup>
   )
 }
