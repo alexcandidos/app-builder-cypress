@@ -43,7 +43,6 @@ const LocalizedField = ({ name, onChange = () => {}, ...props }) => {
   return (
     <ClayLocalizedInput
       {...props}
-      id="locale1"
       spritemap={spritemap}
       locales={locales}
       translations={translations}

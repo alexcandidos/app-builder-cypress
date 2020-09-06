@@ -16,7 +16,7 @@ class FormView extends TestBase {
     })
   }
 
-  _composeFields (parent, addField, languageId, value, fatherSelector = '') {
+  _composeFields (parent, { addField, fatherSelector = '', languageId, value }) {
     let doAction = true
     if (languageId && value) {
       const lang = this.normalizeLang(languageId)
@@ -331,7 +331,7 @@ class FormView extends TestBase {
           cy.get('.tab-pane .field-type').should('not.exist')
           cy.get('@search-input').clear()
         })
-        this._composeFields(parent, true, null, null, fatherSelector)
+        this._composeFields(parent, { fatherSelector })
       }
     })
   }
@@ -359,7 +359,9 @@ class FormView extends TestBase {
           cy.get('.fieldset-modal .modal-header input').type(fieldSet.name)
         })
 
-        this.sidebarRight(fieldSet, true)
+        this._composeFields(fieldSet, {
+          fatherSelector: '.fieldset-modal'
+        })
       })
     }
 
@@ -367,7 +369,11 @@ class FormView extends TestBase {
     //   Object.keys(name).forEach((languageId) => {
     //     if (languageId !== this.getDefaultLanguageId()) {
     //       const value = this.getLocalizedPrefenceValue(name, languageId)
-    //       this._composeFields(this.config.formView, false, languageId, value)
+    // this._composeFields(this.config.formView, {
+    //   addField: false,
+    //   languageId,
+    //   value
+    // })
     //     }
     //   })
     // })

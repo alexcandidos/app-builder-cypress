@@ -30,7 +30,7 @@ const Scenario = () => {
   ]
 
   const onSubmit = (e) => {
-    console.log(e)
+    e.preventDefault()
   }
 
   return (

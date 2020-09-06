@@ -1,5 +1,5 @@
 import ClayDatePicker from '@clayui/date-picker'
-import ClayForm, { ClayInput, ClaySelect, ClayToggle } from '@clayui/form'
+import ClayForm, { ClayInput, ClaySelectWithOption, ClayToggle } from '@clayui/form'
 import React from 'react'
 
 import LocalizedInput from '../LocalizedInput'
@@ -39,15 +39,10 @@ const ClayDatePickerWithState = ({ label, ...props }) => {
 const Select = ({ label, options = [], ...props }) => {
   return (
     <InputGroup label={label}>
-      <ClaySelect aria-label="Select Label" id="mySelectId">
-        {options.map(item => (
-          <ClaySelect.Option
-            key={item.value}
-            label={item.label}
-            value={item.value}
-          />
-        ))}
-      </ClaySelect>
+      <ClaySelectWithOption
+        {...props}
+        aria-label="Select Label"
+        options={options}></ClaySelectWithOption>
     </InputGroup>
   )
 }

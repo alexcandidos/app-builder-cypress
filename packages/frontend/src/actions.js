@@ -1,0 +1,1 @@
+export const ADD_FIELD_TYPE = 'ADD_FIELD_TYPE'

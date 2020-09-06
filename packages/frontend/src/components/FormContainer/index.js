@@ -4,14 +4,13 @@ import ClayPanel from '@clayui/panel'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
-const FormContainer = ({ children, history, onSubmit = () => {} }) => {
+const FormContainer = ({ children, history }) => {
   return (
     <ClayLayout.ContainerFluid className="mt-6">
       <div className="row">
         <div className="col col-12">
-          <form
+          <div
             className="sheet"
-            onSubmit={onSubmit}
           >
             <div className="sheet-header">
               <h2 className="sheet-title">Scenario Creator</h2>
@@ -35,7 +34,7 @@ const FormContainer = ({ children, history, onSubmit = () => {} }) => {
                 </div>
               </ClayButton.Group>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </ClayLayout.ContainerFluid>
