@@ -1,68 +1,41 @@
-import ClayDatePicker from '@clayui/date-picker'
-import ClayForm, { ClayInput } from '@clayui/form'
-import ClayPanel from '@clayui/panel'
-import React from 'react'
-const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
+import React, { useContext, useState } from 'react'
 
-const ClayDatePickerWithState = (props) => {
-  const [value, setValue] = React.useState('')
+import { SYNC_TABLE_VIEW } from '../../../actions'
+import AppContext from '../../../AppContext'
+import { DualBox, LocalizedInput } from '../../../components/Input'
+
+export default function App () {
+  const [{ scenario: { formView: { fieldTypes }, tableView } }, dispatch] = useContext(AppContext)
+  const [state, setState] = useState(tableView)
+
+  const onChange = (name, value) => {
+    const newState = {
+      ...state,
+      [name]: value
+    }
+    setState(newState)
+    dispatch({ payload: newState, type: SYNC_TABLE_VIEW })
+  }
+
+  const selectedFieldTypes = state.selectedFields
+  const availableFieldTypes = fieldTypes
+    .map(({ label }) => ({ label, value: label }))
+    .filter(field => !selectedFieldTypes.some(b => b.label === field.label))
 
   return (
-    <ClayDatePicker
-      {...props}
-      onValueChange={setValue}
-      spritemap={spritemap}
-      value={value}
-    />
+    <div>
+      <LocalizedInput
+        defaultValue={state.name}
+        name="name"
+        onChange={onChange}
+        label="Name"
+      />
+      <DualBox
+        options={[availableFieldTypes, selectedFieldTypes]}
+        onChange={(values) => onChange('selectedFields', values[1])}
+        left={{ label: 'Available Fields' }}
+        right={{ label: 'Selected Fields' }}
+      />
+    </div>
   )
 }
-
-const ObjectModule = ({ form, onChange }) => {
-  return (
-    <ClayPanel
-      displayTitle={'Object / Portal'}
-      displayType="unstyled"
-      spritemap={spritemap}
-    >
-      <ClayPanel.Body>
-        <ClayForm.Group>
-          <label>{'Object Name'}</label>
-          <ClayInput
-            onChange={onChange}
-            name="object.name"
-            placeholder="Name"
-          />
-        </ClayForm.Group>
-        <ClayForm.Group>
-          <label>{'Country'}</label>
-          <ClayInput
-            onChange={onChange}
-            placeholder="Country"
-          />
-        </ClayForm.Group>
-
-        <ClayForm.Group>
-          <label>{'Date'}</label>
-          <ClayDatePickerWithState />
-        </ClayForm.Group>
-
-        <ClayForm.Group>
-          <label>{'State'}</label>
-          <select
-            className="form-control"
-            onChange={onChange}
-          >
-            <option disabled selected>
-              {'-- select an option --'}
-            </option>
-            <option>{'Happy'}</option>
-            <option>{'Mad'}</option>
-            <option>{'Sad'}</option>
-          </select>
-        </ClayForm.Group>
-      </ClayPanel.Body>
-    </ClayPanel>
-  )
-}
-
-export default ObjectModule

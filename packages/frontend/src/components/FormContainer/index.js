@@ -4,7 +4,7 @@ import ClayPanel from '@clayui/panel'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
-const FormContainer = ({ children, history }) => {
+const FormContainer = ({ children, Footer, history }) => {
   return (
     <ClayLayout.ContainerFluid className="mt-6">
       <div className="row">
@@ -21,7 +21,7 @@ const FormContainer = ({ children, history }) => {
             </ClayPanel.Group>
 
             <div className="sheet-footer">
-              <ClayButton.Group>
+              {Footer ? <Footer /> : <ClayButton.Group>
                 <div className="btn-group-item">
                   <ClayButton type="submit">
                     {'Submit'}
@@ -32,7 +32,7 @@ const FormContainer = ({ children, history }) => {
                     {'Cancel'}
                   </ClayButton>
                 </div>
-              </ClayButton.Group>
+              </ClayButton.Group>}
             </div>
           </div>
         </div>

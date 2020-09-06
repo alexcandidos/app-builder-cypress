@@ -27,9 +27,9 @@ const locales = Object.keys(languages).map((key) => {
   }
 })
 
-const LocalizedField = ({ name, onChange = () => {}, ...props }) => {
+const LocalizedField = ({ name, onChange = () => {}, defaultValue = {}, ...props }) => {
   const [selectedLocale, setSelectedLocale] = useState(locales[0])
-  const [translations, setTranslations] = useState({})
+  const [translations, setTranslations] = useState(defaultValue)
 
   const changeSelectedLocate = (value) => {
     setSelectedLocale(value)

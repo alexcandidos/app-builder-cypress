@@ -1,1 +1,6 @@
 export const ADD_FIELD_TYPE = 'ADD_FIELD_TYPE'
+export const SYNC_TABLE_VIEW = 'SYNC_TABLE_VIEW'
+export const SYNC_OBJECT = 'SYNC_OBJECT'
+export const SYNC_FORM_VIEW = 'SYNC_FORM_VIEW'
+export const SYNC_APP = 'SYNC_APP'
+export const SYNC_KEY = 'SYNC_KEY'

@@ -3,7 +3,7 @@ import { Col, Row } from '@clayui/layout'
 import ClayPanel from '@clayui/panel'
 import React, { useContext, useState } from 'react'
 
-import AppContext, { actions } from '../../../AppContext'
+import AppContext, { actions as Actions } from '../../../AppContext'
 import { LocalizedInput, MultiInputSelection, Select, Toggle } from '../../../components/Input'
 import Modal from '../../../components/Modal'
 import Table from '../../../components/Table'
@@ -38,10 +38,10 @@ const fieldTypes = [
 ]
 
 const ObjectModule = () => {
-  const [visible, setVisible] = useState(false)
+  const [{ scenario: { formView } }, dispatch] = useContext(AppContext)
   const [initialState, setInitialState] = useState()
-  const [{ scenario: { formView: { fieldTypes: list } } }, dispatch] = useContext(AppContext)
-  const fieldTypes = list.map((value, id) => ({ id, ...value }))
+  const [visible, setVisible] = useState(false)
+  const [state, setState] = useState(formView)
 
   const renderChecked = (value) => value ? 'X' : '-'
   const renderLocalized = (value) => typeof value === 'string' ? value : JSON.stringify(value)
@@ -58,6 +58,15 @@ const ObjectModule = () => {
     { key: 'showLabel', render: renderChecked, value: 'Show Label' }
   ]
 
+  const onChange = (name, value) => {
+    const newState = {
+      ...state,
+      [name]: value
+    }
+    setState(newState)
+    dispatch({ payload: newState, type: Actions.SYNC_FORM_VIEW })
+  }
+
   const actions = [{
     action: (item) => {
       setInitialState(item)
@@ -65,6 +74,10 @@ const ObjectModule = () => {
     },
     name: 'Edit'
   }]
+
+  console.log({ state })
+
+  const fieldTypes = formView.fieldTypes.map((value, id) => ({ id, ...value }))
 
   return (
     <>
@@ -76,11 +89,15 @@ const ObjectModule = () => {
         <ClayPanel.Body>
           <LocalizedInput
             name="name"
+            defaultValue={state.name}
+            onChange={onChange}
             label="Name"
-            type="localized"
           />
 
-          <Table actions={actions} columns={columns} items={fieldTypes} />
+          <Table
+            actions={actions}
+            columns={columns}
+            items={fieldTypes} />
 
         </ClayPanel.Body>
       </ClayPanel>
@@ -126,7 +143,7 @@ const FieldModal = ({ setVisible, visible }) => {
   const onSubmit = async () => {
     dispatch({
       payload: state,
-      type: actions.ADD_FIELD_TYPE
+      type: Actions.ADD_FIELD_TYPE
     })
   }
 
