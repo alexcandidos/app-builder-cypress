@@ -14,14 +14,19 @@ const Scenario = new Schema({
         name: Object
       },
       object: {
-        name: Object
+        name: String
       },
       tableView: {
         name: Object,
         selectedFields: Array
       },
-      environment: {
+      settings: {
         endpoint: String,
+        customEndpoint: String,
+        testName: String,
+        testDescription: String,
+        defaultLanguageId: {type: String, default: 'en_US'},
+        languageId: {type: String, default: 'en_US'},
       }
 })
 

@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
+import * as yup from 'yup'
 
 import AppContext, { actions } from '../../../AppContext'
 import { Input, Select } from '../../../components/Input'
 
 const options = [{
-  label: 'localhost:8080',
-  value: 'localhost:8080'
+  label: 'http://localhost:8080',
+  value: 'http://localhost:8080'
 },
 {
   label: 'cloud...8080',
@@ -16,21 +17,40 @@ const options = [{
   value: 'other'
 }]
 
+const schema = yup.object().shape({
+  testDescription: yup.string().required(),
+  testName: yup.string().required()
+})
+
+export { schema }
+
 export default function StepEnvironment () {
-  const [{ scenario: { environment } }, dispatch] = useContext(AppContext)
-  const { customEndpoint, endpoint } = environment
+  const [{ scenario: { settings = {} } }, dispatch] = useContext(AppContext)
+  const { customEndpoint, endpoint, testDescription, testName } = settings
   const onChange = ({ target: { name, value } }) => {
     dispatch({
       payload: {
-        ...environment,
+        ...settings,
         [name]: value
       },
-      type: actions.SYNC_ENVIRONMENT
+      type: actions.SYNC_SETTINGS
     })
   }
 
   return (
     <>
+      <Input
+        name="testName"
+        label="Test Name"
+        onChange={onChange}
+        defaultValue={testName} />
+      <Input
+        name="testDescription"
+        onChange={onChange}
+        label="Test Description"
+        defaultValue={testDescription}
+        component="textarea"
+      />
       <Select
         defaultValue={endpoint}
         onChange={onChange}

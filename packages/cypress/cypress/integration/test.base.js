@@ -52,11 +52,11 @@ class TestBase {
   }
 
   getLanguageId () {
-    return this.pipelineConfig.portal.languageId || 'en_US'
+    return this.pipelineConfig.settings.languageId || 'en_US'
   }
 
   getDefaultLanguageId () {
-    return this.pipelineConfig.portal.defaultLanguageId || 'en_US'
+    return this.pipelineConfig.settings.defaultLanguageId || 'en_US'
   }
 
   emptyState () {
@@ -90,7 +90,7 @@ class TestBase {
         })
       })
 
-      selectLanguage(normalizeLang(this.pipelineConfig.portal.defaultLanguageId), true)
+      selectLanguage(normalizeLang(this.pipelineConfig.settings.defaultLanguageId), true)
     }
   }
 

@@ -47,8 +47,8 @@ const ObjectModule = () => {
   const renderLocalized = (value) => typeof value === 'string' ? value : JSON.stringify(value)
 
   const columns = [
+    { key: 'type', value: 'Field Type' },
     { key: 'label', render: renderLocalized, value: 'Label' },
-    { key: 'fieldType', value: 'Field Type' },
     { key: 'predefinedValue', render: renderLocalized, value: 'Predefined Value' },
     { key: 'placeholder', render: renderLocalized, value: 'Placeholder' },
     { key: 'repeatable', render: renderChecked, value: 'Repeatable' },
@@ -73,11 +73,20 @@ const ObjectModule = () => {
       setVisible(true)
     },
     name: 'Edit'
+  }, {
+    action: (item) => {
+      dispatch({
+        payload: {
+          ...formView,
+          fieldTypes: formView.fieldTypes.filter((_, index) => index !== item.id)
+        },
+        type: Actions.SYNC_FORM_VIEW
+      })
+    },
+    name: 'Remove'
   }]
 
-  console.log({ state })
-
-  const fieldTypes = formView.fieldTypes.map((value, id) => ({ id, ...value }))
+  const fieldTypes = formView.fieldTypes.map((value, id) => ({ id, ...value.config, ...value }))
 
   return (
     <>
@@ -113,20 +122,34 @@ const ObjectModule = () => {
 const FieldModal = ({ setVisible, visible }) => {
   const [, dispatch] = useContext(AppContext)
   const [state, setState] = useState({
-    fieldType: 'text',
-    inline: true,
-    multiple: false,
-    repeatable: false,
-    required: false,
-    showAsSwitcher: true,
-    showLabel: false
+    config: {
+      inline: true,
+      multiple: false,
+      repeatable: false,
+      required: false,
+      showAsSwitcher: true,
+      showLabel: false
+    },
+    type: 'text'
   })
 
   const onChange = (name, value) => {
-    setState({
-      ...state,
-      [name]: value
-    })
+    let newState
+    if (name === 'type') {
+      newState = {
+        ...state,
+        [name]: value
+      }
+    } else {
+      newState = {
+        ...state,
+        config: {
+          ...state.config,
+          [name]: value
+        }
+      }
+    }
+    setState(newState)
   }
 
   const onOptionChange = ({ target: { name, value } }) => {
@@ -134,15 +157,15 @@ const FieldModal = ({ setVisible, visible }) => {
   }
 
   const onToggle = (name) => {
-    setState({
-      ...state,
-      [name]: !state[name]
-    })
+    onChange(name, !state[name])
   }
 
   const onSubmit = async () => {
     dispatch({
-      payload: state,
+      payload: {
+        ...state,
+        name: fieldTypes.find(({ value }) => value === state.type).label
+      },
       type: Actions.ADD_FIELD_TYPE
     })
   }
@@ -151,23 +174,30 @@ const FieldModal = ({ setVisible, visible }) => {
     <>
       <Button onClick={() => setVisible(!visible)}>Add Field</Button>
       <Modal title="Create Form" visible={visible} setVisible={setVisible} onSubmit={onSubmit}>
-        <Select label="Field Type" onChange={onOptionChange} name="fieldType" options={fieldTypes} />
+        <Select
+          label="Field Type"
+          onChange={onOptionChange}
+          defaultValue={state.type}
+          name="type"
+          options={fieldTypes}
+        />
         <LocalizedInput
           name="label"
           onChange={onChange}
+          defaultValue={state.config.label}
           label="Label"
         />
         <LocalizedInput
           name="predefinedValue"
           onChange={onChange}
+          defaultValue={state.config.predefinedValue}
           label="Predefined Value"
-          type="localized"
         />
         <LocalizedInput
           name="placeholder"
           onChange={onChange}
+          defaultValue={state.config.placeholder}
           label="Placeholder"
-          type="localized"
         />
         <b>Options</b>
         <Row className="mt-4">
@@ -207,7 +237,7 @@ const FieldModal = ({ setVisible, visible }) => {
           </Col>
 
         </Row>
-        {['radio', 'select', 'checkbox_multiple'].includes(state.fieldType) &&
+        {['radio', 'select', 'checkbox_multiple'].includes(state.type) &&
           <MultiInputSelection label="Options" />}
       </Modal>
     </>

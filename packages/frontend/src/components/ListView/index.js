@@ -7,7 +7,6 @@ import ManagementToolbar from '../ManagementToolbar'
 export default ({ addButton }) => {
   const [items, setItems] = useState([])
   const [selectedMap, setSelectedMap] = useState({})
-  const [sortAsc, setSortAsc] = useState(false)
 
   const fetchData = async () => {
     try {
@@ -28,16 +27,12 @@ export default ({ addButton }) => {
     <div>
       <ManagementToolbar
         addButton={addButton}
-        totalItems={items.length}
         selectedMap={selectedMap}
-        sortAsc={sortAsc}
-        startingIndex={0}
-        setSelectedMap={setSelectedMap}
-        setSortAsc={setSortAsc} />
+        setSelectedMap={setSelectedMap} />
       <List
+        fetchData={fetchData}
         items={items}
         totalItems={items.length}
-        sortAsc={sortAsc}
         selectedMap={selectedMap}
         setSelectedMap={setSelectedMap} />
     </div>

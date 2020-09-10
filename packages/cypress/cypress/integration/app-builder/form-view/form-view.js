@@ -1,9 +1,7 @@
 const TestBase = require('../../test.base')
 
 class FormView extends TestBase {
-  constructor (config = {
-    newObject: false
-  }) {
+  constructor (config) {
     super(config)
     this.config = config
   }
@@ -264,75 +262,71 @@ class FormView extends TestBase {
         cy.get('.data-layout-builder-sidebar form h3').contains(this.config.object.name)
       })
 
-      if (this.config.object.newObject) {
-        it('Should show empty state', () => {
-          cy.get('.empty.sidebar-body').should('be.visible')
-        })
+      it('Should show empty state', () => {
+        cy.get('.empty.sidebar-body').should('be.visible')
+      })
 
-        this.config.formView.fieldTypes.map(({ name: field }, index) => {
-          it(`Add ${field} on Sidebar`, () => {
-            cy.get('.custom-object-dropdown button').click()
+      this.config.formView.fieldTypes.map(({ name: field }, index) => {
+        it(`Add ${field} on Sidebar`, () => {
+          cy.get('.custom-object-dropdown button').click()
 
-            cy.get('.custom-object-dropdown-menu.show').within(() => {
-              cy.get('button').eq(index).click()
-            })
-
-            cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
-            cy.get('div[data-field-name="label"] input').should('have.value', field)
-          })
-        })
-
-        it(`Should have ${this.config.formView.fieldTypes.length} Types on The List`, () => {
-          cy.get('.sidebar-body .custom-object-field').should('have.length', this.config.formView.fieldTypes.length)
-        })
-
-        it('Should search for Liferay and found nothing', () => {
-          cy.get('.custom-object-sidebar-header').within(() => {
-            cy.get('button').eq(0).click()
-            cy.get('input').should('not.have.value').type('Liferay').should('have.value', 'Liferay').as('input-search')
+          cy.get('.custom-object-dropdown-menu.show').within(() => {
+            cy.get('button').eq(index).click()
           })
 
-          cy.get('.sidebar-body .custom-object-field').should('have.length', 0)
+          cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
+          cy.get('div[data-field-name="label"] input').should('have.value', field)
+        })
+      })
+
+      it(`Should have ${this.config.formView.fieldTypes.length} Types on The List`, () => {
+        cy.get('.sidebar-body .custom-object-field').should('have.length', this.config.formView.fieldTypes.length)
+      })
+
+      it('Should search for Liferay and found nothing', () => {
+        cy.get('.custom-object-sidebar-header').within(() => {
+          cy.get('button').eq(0).click()
+          cy.get('input').should('not.have.value').type('Liferay').should('have.value', 'Liferay').as('input-search')
         })
 
-        // it(`Should search for ${firstFieldType.name} and found matching value`, () => {
-        //   cy.get('.custom-object-sidebar-header input')
-        //     .clear()
-        //     .type(firstFieldType.name)
-        //     .should('have.value', firstFieldType.name)
-        //   cy.get('.sidebar-body .custom-object-field').should('have.length', 1)
-        // })
+        cy.get('.sidebar-body .custom-object-field').should('have.length', 0)
+      })
 
-        it('Should back to list FieldTypes', () => {
-          cy.get('.custom-object-sidebar-header').within(() => {
-            cy.get('button').eq(1).click()
-          })
-        })
+      // it(`Should search for ${firstFieldType.name} and found matching value`, () => {
+      //   cy.get('.custom-object-sidebar-header input')
+      //     .clear()
+      //     .type(firstFieldType.name)
+      //     .should('have.value', firstFieldType.name)
+      //   cy.get('.sidebar-body .custom-object-field').should('have.length', 1)
+      // })
 
-        it('Should remote all fields from object', () => {
-          this._deleteAllFieldsFromObject()
+      it('Should back to list FieldTypes', () => {
+        cy.get('.custom-object-sidebar-header').within(() => {
+          cy.get('button').eq(1).click()
         })
-      }
+      })
+
+      it('Should remote all fields from object', () => {
+        this._deleteAllFieldsFromObject()
+      })
     })
   }
 
   sidebarRight (parent = this.config.formView, isFieldSet) {
     const fatherSelector = isFieldSet ? '.fieldset-modal' : ''
     describe('Sidebar Right', () => {
-      if (this.config.object.newObject) {
-        it('Search for Liferay as Field and Found Nothing', () => {
-          cy
-            .wait(1000)
-            .get(`${fatherSelector} .sidebar-header input `)
-            .as('search-input')
-            .should('be.empty')
-            .type('Liferay')
-            .should('have.value', 'Liferay')
-          cy.get('.tab-pane .field-type').should('not.exist')
-          cy.get('@search-input').clear()
-        })
-        this._composeFields(parent, { fatherSelector })
-      }
+      it('Search for Liferay as Field and Found Nothing', () => {
+        cy
+          .wait(1000)
+          .get(`${fatherSelector} .sidebar-header input `)
+          .as('search-input')
+          .should('be.empty')
+          .type('Liferay')
+          .should('have.value', 'Liferay')
+        cy.get('.tab-pane .field-type').should('not.exist')
+        cy.get('@search-input').clear()
+      })
+      this._composeFields(parent, { fatherSelector })
     })
   }
 
@@ -342,7 +336,7 @@ class FormView extends TestBase {
       cy.wait(100)
     })
 
-    // this.sidebarLeft()
+    this.sidebarLeft()
     this.sidebarRight()
     // this.managementTitle(name, this.config.portal)
 

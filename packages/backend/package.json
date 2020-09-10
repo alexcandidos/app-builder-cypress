@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@app-builder-cypress/backend",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "mongoose": "^5.10.3"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

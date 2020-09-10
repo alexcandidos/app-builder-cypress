@@ -10,7 +10,7 @@ const Routes = () => (
     <ApplicationBar />
     <Switch>
       <Route path="/" exact component={List} />
-      <Route path="/scenario" exact component={Scenario} />
+      <Route path="/scenario/:id?" exact component={Scenario} />
     </Switch>
   </BrowserRouter>
 )

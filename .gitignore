@@ -112,3 +112,10 @@ dist
 packages/cypress/cypress/screenshots
 packages/cypress/cypress/results
 packages/cypress/cypress/videos
+packages/cypress/cypress/fixtures/relevant/*
+packages/cypress/cypress/fixtures/solo/*
+packages/cypress/cypress/fixtures/stable/*
+
+packages/cypress/cypress/integration/scenarios/solo/*
+
+

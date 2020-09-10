@@ -1,7 +1,16 @@
 import { createContext } from 'react'
 
 import * as actions from './actions'
-const { ADD_FIELD_TYPE, SYNC_APP, SYNC_ENVIRONMENT, SYNC_FORM_VIEW, SYNC_KEY, SYNC_OBJECT, SYNC_TABLE_VIEW } = actions
+const {
+  ADD_FIELD_TYPE,
+  LOAD_SCENARIO,
+  SYNC_APP,
+  SYNC_FORM_VIEW,
+  SYNC_KEY,
+  SYNC_OBJECT,
+  SYNC_SETTINGS,
+  SYNC_TABLE_VIEW
+} = actions
 
 const AppContext = createContext()
 
@@ -15,38 +24,44 @@ const initialState = {
       },
       name: {}
     },
-    environment: {
-      endpoint: ''
-    },
+
     formView: {
       fieldTypes: [
         {
-          displayType: 'multiple',
-          help: 'Its recommended inform the School Name',
-          label: 'School Name',
-          placeholder: 'School name here',
-          predefinedValue: 'Keven',
-          repeatable: true,
-          required: true,
-          fieldType: 'text'
+          config: {
+            displayType: 'multiple',
+            help: 'Its recommended inform the School Name',
+            label: 'School Name',
+            placeholder: 'School name here',
+            predefinedValue: 'Keven',
+            repeatable: true,
+            required: true
+          },
+          type: 'text'
         },
         {
-          help: 'Student Grade',
-          label: 'School Grade',
-          // multiple: true,
-          options: ['First Grade', 'Second Grade', 'Third Grade'],
-          predefinedOptions: 'Second Grade',
-          showLabel: true,
-          // repeatable: true,
-          required: true,
+          config: {
+            help: 'Student Grade',
+            label: 'School Grade',
+            multiple: true,
+            options: ['First Grade', 'Second Grade', 'Third Grade'],
+            predefinedOptions: 'Second Grade',
+            repeatable: true,
+            required: true,
+            showLabel: true
+          },
           name: 'Select from List',
-          fieldType: 'select'
+          type: 'select'
         }
       ],
       name: {}
     },
     object: {
-      name: {}
+      name: ''
+    },
+    settings: {
+      customEndpoint: '',
+      endpoint: 'http://localhost:8080'
     },
     tableView: {
       name: {},
@@ -95,12 +110,12 @@ const createReducer = () => {
         }
       }
 
-      case SYNC_ENVIRONMENT: {
+      case SYNC_SETTINGS: {
         return {
           ...state,
           scenario: {
             ...state.scenario,
-            environment: {
+            settings: {
               ...action.payload
             }
           }
@@ -142,6 +157,13 @@ const createReducer = () => {
               ...value
             }
           }
+        }
+      }
+
+      case LOAD_SCENARIO: {
+        return {
+          ...state,
+          scenario: action.payload
         }
       }
 
