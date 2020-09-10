@@ -1,3 +1,4 @@
+import { languages as LangKeys } from '@app-builder-cypress/common'
 import React, { useContext } from 'react'
 import * as yup from 'yup'
 
@@ -24,9 +25,17 @@ const schema = yup.object().shape({
 
 export { schema }
 
+const languages = Object.keys(LangKeys.languages).map((key) => {
+  const language = LangKeys.languages[key]
+  return {
+    label: language.value,
+    value: language.key2
+  }
+}).sort((a, b) => a.label.localeCompare(b.label))
+
 export default function StepEnvironment () {
   const [{ scenario: { settings = {} } }, dispatch] = useContext(AppContext)
-  const { customEndpoint, endpoint, testDescription, testName } = settings
+  const { customEndpoint, defaultLanguageId, endpoint, languageId, testDescription, testName } = settings
   const onChange = ({ target: { name, value } }) => {
     dispatch({
       payload: {
@@ -51,6 +60,18 @@ export default function StepEnvironment () {
         defaultValue={testDescription}
         component="textarea"
       />
+      <Select
+        defaultValue={defaultLanguageId}
+        onChange={onChange}
+        name="defaultLanguageId"
+        label="Instance Language"
+        options={languages} />
+      <Select
+        defaultValue={languageId}
+        onChange={onChange}
+        name="languageId"
+        label="Portal Language"
+        options={languages} />
       <Select
         defaultValue={endpoint}
         onChange={onChange}

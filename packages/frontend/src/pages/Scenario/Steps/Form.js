@@ -1,3 +1,4 @@
+import { fieldTypes } from '@app-builder-cypress/common'
 import Button from '@clayui/button'
 import { Col, Row } from '@clayui/layout'
 import ClayPanel from '@clayui/panel'
@@ -8,34 +9,6 @@ import { LocalizedInput, MultiInputSelection, Select, Toggle } from '../../../co
 import Modal from '../../../components/Modal'
 import Table from '../../../components/Table'
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
-
-const fieldTypes = [
-  {
-    label: 'Text',
-    value: 'text'
-  },
-  {
-    label: 'Select from List',
-    value: 'select'
-  },
-  {
-    label: 'Single Selection',
-    value: 'radio'
-  },
-  {
-    label: 'Multiple Selection',
-    value: 'checkbox_multiple'
-  },
-  {
-    label: 'Date',
-    value: 'date'
-  },
-  {
-    label: 'Numeric',
-    value: 'numeric'
-  },
-  { label: 'Upload', value: 'document_library' }
-]
 
 const ObjectModule = () => {
   const [{ scenario: { formView } }, dispatch] = useContext(AppContext)
@@ -170,6 +143,11 @@ const FieldModal = ({ setVisible, visible }) => {
     })
   }
 
+  const fieldTypeOptions = fieldTypes
+    .map(({ name: label, options, type: value }) => ({ label, options, value }))
+
+  const { options } = fieldTypeOptions.find(({ value }) => value === state.type)
+
   return (
     <>
       <Button onClick={() => setVisible(!visible)}>Add Field</Button>
@@ -179,7 +157,7 @@ const FieldModal = ({ setVisible, visible }) => {
           onChange={onOptionChange}
           defaultValue={state.type}
           name="type"
-          options={fieldTypes}
+          options={fieldTypeOptions}
         />
         <LocalizedInput
           name="label"
@@ -201,41 +179,16 @@ const FieldModal = ({ setVisible, visible }) => {
         />
         <b>Options</b>
         <Row className="mt-4">
-          <Col>
-            <Toggle label="Repeatable"
-              onToggle={() => onToggle('repeatable')}
-              toggled={state.repeatable}
-            />
-          </Col>
-          <Col>
-            <Toggle
-              label="Inline"
-              onToggle={() => onToggle('inline')}
-              toggled={state.inline} />
-          </Col>
-          <Col>
-            <Toggle
-              label="Multiple"
-              onToggle={() => onToggle('multiple')}
-              toggled={state.multiple} /></Col>
-          <Col>
-            <Toggle
-              label="Show As Switcher"
-              onToggle={() => onToggle('showAsSwitcher')}
-              toggled={state.showAsSwitcher} /></Col>
-          <Col>
-            <Toggle
-              label="Show Label"
-              onToggle={() => onToggle('showLabel')}
-              toggled={state.showLabel} />
-          </Col>
-          <Col>
-            <Toggle label="Required"
-              onToggle={() => onToggle('required')}
-              toggled={state.required}
-            />
-          </Col>
-
+          {options
+            .filter(({ type }) => type === 'boolean')
+            .map(({ label, name }) => (
+              <Col key={name}>
+                <Toggle
+                  label={label}
+                  onToggle={() => onToggle(name)}
+                  toggled={state[name]} />
+              </Col>
+            ))}
         </Row>
         {['radio', 'select', 'checkbox_multiple'].includes(state.type) &&
           <MultiInputSelection label="Options" />}

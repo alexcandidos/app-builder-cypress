@@ -26,7 +26,7 @@ const Scenario = ({ history, match: { params } }) => {
         dispatch({ payload: scenario, type: LOAD_SCENARIO })
       })
     }
-  }, [id])
+  }, [id, dispatch])
 
   const steps = [
     {
@@ -88,6 +88,10 @@ const Scenario = ({ history, match: { params } }) => {
       case 5: {
         value = Object.values(app.name).some(value => value)
         break
+      }
+
+      default: {
+        value = true
       }
     }
     setValid(value)

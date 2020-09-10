@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@app-builder-cypress/common": "1.0.0",
     "@clayui/button": "^3.4.0",
     "@clayui/css": "^3.18.1",
     "@clayui/date-picker": "^3.5.4",

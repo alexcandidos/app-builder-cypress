@@ -26,34 +26,7 @@ const initialState = {
     },
 
     formView: {
-      fieldTypes: [
-        {
-          config: {
-            displayType: 'multiple',
-            help: 'Its recommended inform the School Name',
-            label: 'School Name',
-            placeholder: 'School name here',
-            predefinedValue: 'Keven',
-            repeatable: true,
-            required: true
-          },
-          type: 'text'
-        },
-        {
-          config: {
-            help: 'Student Grade',
-            label: 'School Grade',
-            multiple: true,
-            options: ['First Grade', 'Second Grade', 'Third Grade'],
-            predefinedOptions: 'Second Grade',
-            repeatable: true,
-            required: true,
-            showLabel: true
-          },
-          name: 'Select from List',
-          type: 'select'
-        }
-      ],
+      fieldTypes: [],
       name: {}
     },
     object: {
@@ -61,7 +34,9 @@ const initialState = {
     },
     settings: {
       customEndpoint: '',
-      endpoint: 'http://localhost:8080'
+      defaultLanguageId: 'en-US',
+      endpoint: 'http://localhost:8080',
+      languageId: 'en-US'
     },
     tableView: {
       name: {},

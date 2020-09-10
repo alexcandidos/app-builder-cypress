@@ -25,8 +25,8 @@ const Scenario = new Schema({
         customEndpoint: String,
         testName: String,
         testDescription: String,
-        defaultLanguageId: {type: String, default: 'en_US'},
-        languageId: {type: String, default: 'en_US'},
+        defaultLanguageId: {type: String, default: 'en-US'},
+        languageId: {type: String, default: 'en-US'},
       }
 })
 
