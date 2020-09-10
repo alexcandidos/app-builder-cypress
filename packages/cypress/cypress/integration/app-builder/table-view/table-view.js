@@ -12,13 +12,11 @@ class TableView extends TestBase {
       this.selectors.changeObjectTab(1)
     })
 
-    if (this.config.object.newObject) {
-      it('Should contains an empty state', () => {
-        this.emptyState()
-      })
-    }
+    it('Should contains an empty state', () => {
+      this.emptyState()
+    })
 
-    if (this.config.tableView.newTableView) {
+    if (this.config.tableView) {
       it('Open Add TableView', () => {
         cy.get('.nav-item button.btn-primary').click()
       })
@@ -43,7 +41,8 @@ class TableView extends TestBase {
         cy.get('.tab-content .field-type').should('have.length', fieldTypes.length)
       })
 
-      fieldTypes.forEach(({ config: { label } }) => {
+      fieldTypes.forEach(({ config }) => {
+        const { label } = this.getLocalizedConfig(config)
         describe(`Should do action on [${label}] column created on FormView`, () => {
           const findByLabel = () => cy.get('.list-group-title span').contains(label)
           it(`Column [${label}] matches with the FormView item label`, () => {

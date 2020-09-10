@@ -374,7 +374,7 @@ const SCENARIO_COMMERCE1 = {
     name: 'School',
     newObject: true
   },
-  portal: {
+  settings: {
     defaultLanguageId: constants.languages.en_US.key,
     languageId: constants.languages.en_US.key,
     repeatsOn: {
@@ -394,10 +394,10 @@ const SCENARIO_COMMERCE1 = {
 }
 
 const Scenarios = {
-  SCENARIO_COMMERCE
+  SCENARIO_COMMERCE1
 }
 
-const Scenariosa = {
+const Scenariosx = {
   SCENARIO_1: {
     app: {
       name: {
@@ -500,7 +500,7 @@ const Scenariosa = {
       name: 'School',
       newObject: true
     },
-    portal: {
+    settings: {
       defaultLanguageId: constants.languages.en_US.key,
       languageId: constants.languages.en_US.key,
       repeatsOn: {

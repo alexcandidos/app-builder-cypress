@@ -14,7 +14,7 @@ class FormView extends TestBase {
     })
   }
 
-  _composeFields (parent, { addField, fatherSelector = '', languageId, value }) {
+  _composeFields (parent, { addField = true, fatherSelector = '', languageId, value }) {
     let doAction = true
     if (languageId && value) {
       const lang = this.normalizeLang(languageId)
@@ -24,6 +24,10 @@ class FormView extends TestBase {
       })
     } else {
       if (!fatherSelector) {
+        it('log', () => {
+          cy.log(this.getLocalizedValue(parent.name))
+          cy.log(parent.name)
+        })
         this.setTitle(this.getLocalizedValue(parent.name))
       }
       doAction = false
@@ -31,23 +35,13 @@ class FormView extends TestBase {
 
     parent.fieldTypes.filter(({ type }) => type).map((field, index) => {
       const isScrollDown = index >= 2
-      const { name, type } = field
-      describe(`Should handle ${name} Field and Fill Values`, () => {
-        if (addField) {
-          it('add field on DataLayout', () => {
-            cy.get(`[data-field-type-name="${type}"]`).dblclick()
-          })
-        } else {
-          it('Click on Field on Layout', () => {
-            cy.get(`.ddm-form-builder-wrapper [data-field-name="${field.config.id}"]`).eq(0).click()
-          })
-        }
-
+      describe(`Should handle ${field.name} Field and Fill Values`, () => {
         it(`Scroll ${isScrollDown ? 'Down' : 'Up'}`, () => {
           cy.scrollTo(isScrollDown ? 'bottom' : 'top')
         })
 
         this._fieldCompose(field, {
+          addField,
           doAction,
           fatherSelector,
           languageId
@@ -60,19 +54,6 @@ class FormView extends TestBase {
     })
   }
 
-  getLocalizedConfig (config, lang) {
-    const newConfigs = {
-      ...config
-    }
-    Object.keys(config).forEach((key) => {
-      const value = config[key]
-      if (typeof value === 'object') {
-        newConfigs[key] = this.getLocalizedPrefenceValue(value, lang)
-      }
-    })
-    return newConfigs
-  }
-
   _deleteAllFieldsFromObject () {
     cy.get('.custom-object-field').each(() => {
       cy.get('.field-type-remove-icon button').eq(0).click({ force: true })
@@ -81,8 +62,10 @@ class FormView extends TestBase {
     })
   }
 
-  _fieldCompose (field, { doAction, fatherSelector, languageId }) {
+  _fieldCompose (field, { addField, doAction, fatherSelector, languageId }) {
+    const { type } = field
     const {
+      addType = 'dbClick',
       displayType,
       help,
       inline,
@@ -114,6 +97,28 @@ class FormView extends TestBase {
     } = this.selectors
 
     const withAdvancedField = predefinedValue || showLabel || repeatable || inline || predefinedOptions
+
+    if (addField) {
+      const fieldSelector = `[data-field-type-name="${type}"]`
+      if (addType === 'dbClick') {
+        it('Should add field on DataLayout using [dbClick]', () => {
+          cy.get(fieldSelector).dblclick()
+        })
+      } else {
+        it('Should add field on DataLayout using [drag-and-drop]', () => {
+          if (addType === 'top') {
+            cy.get('.ddm-target').first().as('target')
+          } else {
+            cy.get('.ddm-target').last().as('target')
+          }
+          cy.get(fieldSelector).drag('@target')
+        })
+      }
+    } else {
+      it('Click on Field on Layout', () => {
+        cy.get(`.ddm-form-builder-wrapper [data-field-name="${field.config.id}"]`).eq(0).click()
+      })
+    }
 
     const applySelector = (selector) => {
       return fatherSelector ? `${fatherSelector} ${selector}` : selector
@@ -274,8 +279,8 @@ class FormView extends TestBase {
             cy.get('button').eq(index).click()
           })
 
-          cy.get('.sidebar-body .custom-object-field').eq(index).contains(field)
-          cy.get('div[data-field-name="label"] input').should('have.value', field)
+          // cy.get('.sidebar-body .custom-object-field').eq(index).contains(field) // review logic
+          // cy.get('div[data-field-name="label"] input').should('have.value', field)  // review logic
         })
       })
 
@@ -331,56 +336,56 @@ class FormView extends TestBase {
   }
 
   runPipeline () {
-    const name = this.config.formView.name
     beforeEach(() => {
       cy.wait(100)
     })
 
-    this.sidebarLeft()
+    const name = this.config.formView.name
+
+    // this.sidebarLeft()
     this.sidebarRight()
-    // this.managementTitle(name, this.config.portal)
 
     const fieldSet = this.config.fieldset
-    if (fieldSet) {
-      describe('Create FieldSet', () => {
-        it('Open FieldSet section', () => {
-          cy.get('.nav-underline .nav-item').eq(1).click()
-          this.emptyState()
-          cy.get('.add-fieldset').click()
-        })
+    // if (fieldSet) {
+    //   describe('Create FieldSet', () => {
+    //     it('Open FieldSet section', () => {
+    //       cy.get('.nav-underline .nav-item').eq(1).click()
+    //       this.emptyState()
+    //       cy.get('.add-fieldset').click()
+    //     })
 
-        it('Put the title', () => {
-          cy.get('.fieldset-modal .modal-header input').type(fieldSet.name)
-        })
+    //     it('Put the title', () => {
+    //       cy.get('.fieldset-modal .modal-header input').type(fieldSet.name)
+    //     })
 
-        this._composeFields(fieldSet, {
-          fatherSelector: '.fieldset-modal'
-        })
+    //     this._composeFields(fieldSet, {
+    //       fatherSelector: '.fieldset-modal'
+    //     })
+    //   })
+    // }
+
+    describe('Should set title and Form in multiple languages', () => {
+      Object.keys(name).forEach((languageId) => {
+        if (languageId !== this.getDefaultLanguageId()) {
+          const value = this.getLocalizedPrefenceValue(name, languageId)
+          this._composeFields(this.config.formView, {
+            addField: false,
+            languageId,
+            value
+          })
+        }
       })
-    }
+    })
 
-    // describe('Should set title and Form in multiple languages', () => {
-    //   Object.keys(name).forEach((languageId) => {
-    //     if (languageId !== this.getDefaultLanguageId()) {
-    //       const value = this.getLocalizedPrefenceValue(name, languageId)
-    // this._composeFields(this.config.formView, {
-    //   addField: false,
-    //   languageId,
-    //   value
-    // })
-    //     }
-    //   })
-    // })
+    describe('Submit', () => {
+      it('Submit FormView', () => {
+        cy.get('.app-builder-upper-toolbar button.btn-primary').click()
+      })
 
-    // describe('Submit', () => {
-    //   it('Submit FormView', () => {
-    //     cy.get('.app-builder-upper-toolbar button.btn-primary').click()
-    //   })
-
-    //   it('Validate ListView', () => {
-    //     this.validateListView(name)
-    //   })
-    // })
+      it('Validate ListView', () => {
+        this.validateListView(name)
+      })
+    })
   }
 
   run () {

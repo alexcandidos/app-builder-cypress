@@ -51,9 +51,13 @@ class AppBuilderObject extends TestBase {
 
     const { app: appConfig } = pipeline
 
-    portalLanguage.normalizeLanguages()
+    // portalLanguage.normalizeLanguages()
 
     describe('Run Portal on Instance', () => {
+      xit('visit', () => {
+        cy.visit('http://localhost:8080/group/guest/~/control_panel/manage?p_p_id=com_liferay_app_builder_web_internal_portlet_ObjectsPortlet&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&p_p_auth=h219BBRV&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataDefinitionId=38884&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataLayoutId=38890&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_mvcRenderCommandName=%2Fedit_form_view')
+      })
+
       it('Navigate to Object', () => {
         cy.visit(this.constants.modules.object)
       })
@@ -72,21 +76,21 @@ class AppBuilderObject extends TestBase {
         })
       }
 
-      // if (pipeline.tableView) {
-      //   describe('Run TableView pipeline', () => {
-      //     tableView.pipeline()
-      //   })
-      // }
+      if (pipeline.tableView) {
+        describe('Run TableView pipeline', () => {
+          tableView.pipeline()
+        })
+      }
 
-      // if (appConfig) {
-      //   describe('Run App pipeline', () => {
-      //     app.pipeline()
-      //   })
+      if (appConfig) {
+        describe('Run App pipeline', () => {
+          app.pipeline()
+        })
 
-      //   describe('Run Standalone Pipeline', () => {
-      //     standalone.pipeline()
-      //   })
-      // }
+        describe('Run Standalone Pipeline', () => {
+          standalone.pipeline()
+        })
+      }
     })
   }
 
@@ -101,12 +105,12 @@ class AppBuilderObject extends TestBase {
           this.preserve()
         })
 
-        if (pipeline.portal.repeatsOn && pipeline.portal.repeatsOn.length) {
-          pipeline.portal.repeatsOn.forEach((instance) => {
+        if (pipeline.settings.repeatsOn && pipeline.settings.repeatsOn.length) {
+          pipeline.settings.repeatsOn.forEach((instance) => {
             this.pipeline({
               ...pipeline,
-              portal: {
-                ...pipeline.portal,
+              settings: {
+                ...pipeline.settings,
                 ...instance
               }
             })

@@ -63,6 +63,19 @@ class TestBase {
     cy.get('.taglib-empty-result-message').should('be.visible')
   }
 
+  getLocalizedConfig (config = {}, lang = this.getDefaultLanguageId()) {
+    const newConfigs = {
+      ...config
+    }
+    Object.keys(config).forEach((key) => {
+      const value = config[key]
+      if (typeof value === 'object') {
+        newConfigs[key] = this.getLocalizedPrefenceValue(value, lang)
+      }
+    })
+    return newConfigs
+  }
+
   managementTitle (name) {
     const normalizeLang = (lang) => lang.replace('_', '-').toLowerCase()
     const selectLanguage = (lang, force = false) => {
