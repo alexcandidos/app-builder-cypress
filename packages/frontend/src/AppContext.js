@@ -2,7 +2,6 @@ import { createContext } from 'react'
 
 import * as actions from './actions'
 const {
-  ADD_FIELD_TYPE,
   LOAD_SCENARIO,
   SYNC_APP,
   SYNC_FORM_VIEW,
@@ -48,19 +47,6 @@ const initialState = {
 const createReducer = () => {
   return (state = initialState, action) => {
     switch (action.type) {
-      case ADD_FIELD_TYPE: {
-        return {
-          ...state,
-          scenario: {
-            ...state.scenario,
-            formView: {
-              ...state.scenario.formView,
-              fieldTypes: [...state.scenario.formView.fieldTypes, action.payload]
-            }
-          }
-        }
-      }
-
       case SYNC_FORM_VIEW: {
         return {
           ...state,

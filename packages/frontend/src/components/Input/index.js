@@ -6,41 +6,6 @@ import LocalizedInput from '../LocalizedInput'
 import MultiInput from '../MultiSelect'
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
-const moveBoxesOptions = [
-  [
-    {
-      label: 'Discord',
-      value: 'discord'
-    },
-    {
-      label: 'Evernote',
-      value: 'evernote'
-    },
-    {
-      label: 'Facebook',
-      value: 'facebook'
-    },
-    {
-      label: 'LinkedIn',
-      value: 'linkedin'
-    }
-  ],
-  [
-    {
-      label: 'Reddit',
-      value: 'reddit'
-    },
-    {
-      label: 'Slack',
-      value: 'slack'
-    },
-    {
-      label: 'Twitter',
-      value: 'twitter'
-    }
-  ]
-]
-
 const InputGroup = ({ children, label }) => (
   <ClayForm.Group>
     <label>{label}</label>
@@ -96,10 +61,14 @@ const Toggle = (props) => (
   </InputGroup>
 )
 
-const DualBox = ({ options = moveBoxesOptions, left, right, onChange = () => {} }) => {
-  const [items, setItems] = useState(options)
+const DualBox = ({ options, left, right, onChange = () => {} }) => {
+  const [items, setItems] = useState([[], []])
   const [leftSelected, setLeftSelected] = useState([])
   const [rightSelected, setRightSelected] = useState([])
+
+  React.useEffect(() => {
+    setItems(options)
+  }, [options])
 
   const onItemChange = (values) => {
     setItems(values)

@@ -17,7 +17,7 @@ import StepTable from './Steps/Table'
 const Scenario = ({ history, match: { params } }) => {
   const [{ scenario }, dispatch] = useContext(AppContext)
   const [isValid, setValid] = useState(false)
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(4)
   const { id } = params
 
   useEffect(() => {

@@ -61,19 +61,19 @@ export default function StepEnvironment () {
         component="textarea"
       />
       <Select
-        defaultValue={defaultLanguageId}
+        value={defaultLanguageId}
         onChange={onChange}
         name="defaultLanguageId"
         label="Instance Language"
         options={languages} />
       <Select
-        defaultValue={languageId}
+        value={languageId}
         onChange={onChange}
         name="languageId"
         label="Portal Language"
         options={languages} />
       <Select
-        defaultValue={endpoint}
+        value={endpoint}
         onChange={onChange}
         name="endpoint"
         label="Endpoint"

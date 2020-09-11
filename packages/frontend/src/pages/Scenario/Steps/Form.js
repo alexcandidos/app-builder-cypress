@@ -2,7 +2,7 @@ import { fieldTypes } from '@app-builder-cypress/common'
 import Button from '@clayui/button'
 import { Col, Row } from '@clayui/layout'
 import ClayPanel from '@clayui/panel'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import AppContext, { actions as Actions } from '../../../AppContext'
 import { LocalizedInput, MultiInputSelection, Select, Toggle } from '../../../components/Input'
@@ -13,6 +13,7 @@ const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 const ObjectModule = () => {
   const [{ scenario: { formView } }, dispatch] = useContext(AppContext)
   const [initialState, setInitialState] = useState()
+  const [editIndex, setEditIndex] = useState()
   const [visible, setVisible] = useState(false)
   const [state, setState] = useState(formView)
 
@@ -41,11 +42,27 @@ const ObjectModule = () => {
   }
 
   const actions = [{
-    action: (item) => {
-      setInitialState(item)
+    action: ({ id, originalItem }) => {
+      setInitialState(originalItem)
       setVisible(true)
+      setEditIndex(id)
     },
     name: 'Edit'
+  },
+  {
+    name: 'divider'
+  },
+  {
+    action: ({ originalItem }) => {
+      dispatch({
+        payload: {
+          ...formView,
+          fieldTypes: [...formView.fieldTypes, originalItem]
+        },
+        type: Actions.SYNC_FORM_VIEW
+      })
+    },
+    name: 'Duplicate'
   }, {
     action: (item) => {
       dispatch({
@@ -59,7 +76,8 @@ const ObjectModule = () => {
     name: 'Remove'
   }]
 
-  const fieldTypes = formView.fieldTypes.map((value, id) => ({ id, ...value.config, ...value }))
+  const fieldTypes = formView.fieldTypes
+    .map((value, id) => ({ id, ...value.config, ...value, originalItem: value }))
 
   return (
     <>
@@ -84,16 +102,22 @@ const ObjectModule = () => {
         </ClayPanel.Body>
       </ClayPanel>
       <FieldModal
+        editIndex={editIndex}
         visible={visible}
-        setVisible={setVisible}
+        setVisible={() => {
+          setVisible(!visible)
+          setEditIndex()
+        }}
         initialState={initialState}
       />
     </>
   )
 }
 
-const FieldModal = ({ setVisible, visible }) => {
-  const [, dispatch] = useContext(AppContext)
+const FieldModal = ({
+  editIndex, initialState, setVisible, visible
+}) => {
+  const [{ scenario: { formView } }, dispatch] = useContext(AppContext)
   const [state, setState] = useState({
     config: {
       inline: true,
@@ -105,6 +129,12 @@ const FieldModal = ({ setVisible, visible }) => {
     },
     type: 'text'
   })
+
+  useEffect(() => {
+    if (initialState) {
+      setState(initialState)
+    }
+  }, [initialState])
 
   const onChange = (name, value) => {
     let newState
@@ -134,12 +164,30 @@ const FieldModal = ({ setVisible, visible }) => {
   }
 
   const onSubmit = async () => {
+    let newFieldTypes
+    console.log(fieldTypes)
+    const name = fieldTypes.find(({ type }) => type === state.type).name
+    const newState = {
+      ...state,
+      name
+    }
+    if (initialState) {
+      newFieldTypes = formView.fieldTypes.map((fieldType, index) => {
+        if (index === editIndex) {
+          return newState
+        }
+        return fieldType
+      })
+    } else {
+      newFieldTypes = newState
+    }
+
     dispatch({
       payload: {
-        ...state,
-        name: fieldTypes.find(({ value }) => value === state.type).label
+        ...formView,
+        fieldTypes: newFieldTypes
       },
-      type: Actions.ADD_FIELD_TYPE
+      type: Actions.SYNC_FORM_VIEW
     })
   }
 
@@ -150,7 +198,7 @@ const FieldModal = ({ setVisible, visible }) => {
 
   return (
     <>
-      <Button onClick={() => setVisible(!visible)}>Add Field</Button>
+      <Button onClick={setVisible}>Add Field</Button>
       <Modal title="Create Form" visible={visible} setVisible={setVisible} onSubmit={onSubmit}>
         <Select
           label="Field Type"

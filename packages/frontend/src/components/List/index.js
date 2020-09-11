@@ -17,6 +17,10 @@ const List = ({
   const [activePage, setActivePage] = React.useState(1)
   const [delta, setDelta] = React.useState(10)
 
+  const onError = () => {
+    toast.error('An unexpected error happened')
+  }
+
   const listItems = items.map(item => {
     const { _id, settings: { testDescription, testName } } = item
     const url = `/scenario/${_id}`
@@ -29,11 +33,21 @@ const List = ({
           onClick: () => history.push(url)
         },
         {
+          label: 'Duplicate',
+          onClick: () => {
+            api.post(`scenario/duplicate/${_id}`)
+              .then(({ data: { message } }) => Promise.resolve(toast.info(message)))
+              .then(fetchData)
+              .catch(onError)
+          }
+        },
+        {
           label: 'Remove',
           onClick: () => {
             api.delete(url)
               .then(({ data: { message } }) => Promise.resolve(toast.success(message)))
               .then(fetchData)
+              .catch(onError)
           }
         }
       ],
