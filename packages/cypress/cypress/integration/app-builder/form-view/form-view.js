@@ -65,7 +65,7 @@ class FormView extends TestBase {
   _fieldCompose (field, { addField, doAction, fatherSelector, languageId }) {
     const { type } = field
     const {
-      addType = 'dbClick',
+      addType = 'bottom',
       displayType,
       help,
       inline,

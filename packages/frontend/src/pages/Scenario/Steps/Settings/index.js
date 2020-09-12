@@ -2,8 +2,8 @@ import { languages as LangKeys } from '@app-builder-cypress/common'
 import React, { useContext } from 'react'
 import * as yup from 'yup'
 
-import AppContext, { actions } from '../../../AppContext'
-import { Input, Select } from '../../../components/Input'
+import AppContext, { actions } from '../../../../AppContext'
+import { Input, Select } from '../../../../components/Input'
 
 const options = [{
   label: 'http://localhost:8080',

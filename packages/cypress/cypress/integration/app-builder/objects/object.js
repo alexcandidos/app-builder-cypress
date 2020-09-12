@@ -51,7 +51,7 @@ class AppBuilderObject extends TestBase {
 
     const { app: appConfig } = pipeline
 
-    // portalLanguage.normalizeLanguages()
+    portalLanguage.normalizeLanguages()
 
     describe('Run Portal on Instance', () => {
       xit('visit', () => {

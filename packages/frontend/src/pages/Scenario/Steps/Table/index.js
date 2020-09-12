@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 
-import { SYNC_TABLE_VIEW } from '../../../actions'
-import AppContext from '../../../AppContext'
-import { DualBox, LocalizedInput } from '../../../components/Input'
+import { SYNC_TABLE_VIEW } from '../../../../actions'
+import AppContext from '../../../../AppContext'
+import { DualBox, LocalizedInput } from '../../../../components/Input'
 
 export default function App () {
   const [

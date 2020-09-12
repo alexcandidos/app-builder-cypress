@@ -1,5 +1,7 @@
 import ClayLocalizedInput from '@clayui/localized-input'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+
+import AppContext from '../../AppContext'
 
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
@@ -19,20 +21,30 @@ const languages = {
   sv_SE: { key: 'sv_SE', value: 'Swedish (Sweden)' }
 }
 
-const locales = Object.keys(languages).map((key) => {
-  const label = key.replace('_', '-')
-  return {
-    label,
-    symbol: label.toLowerCase()
+const formatLocale = (defaultLanguageId) => {
+  const newLanguages = {
+    [defaultLanguageId]: defaultLanguageId,
+    ...languages
   }
-})
+  return Object.keys(newLanguages).map((key) => {
+    const label = key.replace('_', '-')
+    return {
+      label,
+      symbol: label.toLowerCase()
+    }
+  })
+}
 
 const LocalizedField = ({ name, onChange = () => {}, defaultValue = {}, ...props }) => {
+  const [{ scenario: { settings: { defaultLanguageId } } }] = useContext(AppContext)
+  const locales = formatLocale(defaultLanguageId.replace('-', '_'))
   const [selectedLocale, setSelectedLocale] = useState(locales[0])
-  const [translations, setTranslations] = useState({})
+  const [translations, setTranslations] = useState()
 
   React.useEffect(() => {
-    if (defaultValue) {
+    if (!translations && Object.values(defaultValue).length) {
+      const initialLocale = locales.find(({ label }) => label === defaultLanguageId)
+      setSelectedLocale(initialLocale)
       setTranslations(defaultValue)
     }
   }, [defaultValue])
@@ -51,7 +63,7 @@ const LocalizedField = ({ name, onChange = () => {}, defaultValue = {}, ...props
       {...props}
       spritemap={spritemap}
       locales={locales}
-      translations={translations}
+      translations={translations || {}}
       onSelectedLocaleChange={changeSelectedLocate}
       onTranslationsChange={onTranslationChange}
       selectedLocale={selectedLocale}

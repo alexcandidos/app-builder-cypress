@@ -1,8 +1,8 @@
 import ClayPanel from '@clayui/panel'
 import React, { useContext } from 'react'
 
-import AppContext, { actions } from '../../../AppContext'
-import { Input } from '../../../components/Input'
+import AppContext, { actions } from '../../../../AppContext'
+import { Input } from '../../../../components/Input'
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
 const ObjectModule = () => {

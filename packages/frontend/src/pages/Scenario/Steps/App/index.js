@@ -1,9 +1,9 @@
 import { Col, Row } from '@clayui/layout'
 import React, { useContext, useState } from 'react'
 
-import { SYNC_APP } from '../../../actions'
-import AppContext from '../../../AppContext'
-import { LocalizedInput, Toggle } from '../../../components/Input'
+import { SYNC_APP } from '../../../../actions'
+import AppContext from '../../../../AppContext'
+import { LocalizedInput, Toggle } from '../../../../components/Input'
 
 export default function App () {
   const [{ scenario: { app } }, dispatch] = useContext(AppContext)

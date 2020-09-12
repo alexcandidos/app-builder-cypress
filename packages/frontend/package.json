@@ -8,6 +8,7 @@
     "@clayui/css": "^3.18.1",
     "@clayui/date-picker": "^3.5.4",
     "@clayui/drop-down": "^3.7.0",
+    "@clayui/empty-state": "^3.2.0",
     "@clayui/form": "^3.11.1",
     "@clayui/icon": "^3.0.5",
     "@clayui/label": "^3.3.1",
