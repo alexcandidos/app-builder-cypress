@@ -9,25 +9,26 @@ class Standalone extends TestBase {
     cy.get(`.app-builder-form-buttons ${this.selectors.primaryButton}`).click().wait(500)
   }
 
-  _validateEntry (fieldType, index) {
+  _validateEntry (fieldType, languageId) {
     const {
-      config: {
-        displayType,
-        help,
-        inline,
-        label,
-        multiple,
-        placeholder,
-        predefinedValue,
-        repeatable,
-        required,
-        showAsSwitcher,
-        showLabel = true
-      }
-    } = fieldType
+      displayType,
+      help,
+      inline,
+      label,
+      multiple,
+      options,
+      placeholder,
+      predefinedOption,
+      predefinedValue,
+      repeatable,
+      required,
+      showAsSwitcher,
+      showLabel = true
+    } = this.getLocalizedConfig(fieldType.config, languageId)
 
     beforeEach(() => {
-      cy.get('.position-relative.row').eq(index + 1).as('field')
+      cy.get(`[data-field-name="${fieldType.config.id}"]`).as('field')
+      // cy.get('.position-relative.row').eq(index + 1).as('field')
     })
 
     if (showLabel) {
@@ -80,18 +81,42 @@ class Standalone extends TestBase {
         cy.get('@field').find('.ddm-form-field-repeatable-add-button').click()
       })
     }
-  }
 
-  // it('Open Standalone', () => {
-  //   cy.visit('http://localhost:8080/web/App46586#/')
-  // })
+    const notInputFieldTypes = ['radio', 'select', 'checkbox_multiple']
+
+    if (!notInputFieldTypes.includes(fieldType.type)) {
+      const value = this.getFakeValueByType(fieldType.type)
+
+      it(`Typing [${value}] value`, () => {
+        if (fieldType.type === 'date') {
+          const date = new Date(2019, 2, 10)
+          cy.get('@field').find('.date-picker-dropdown-toggle').click()
+          cy.get('.date-picker-dropdown-menu.show').within(() => {
+            cy.get('select[name="month"]').select(date.getMonth().toString())
+            cy.get('select[name="year"]').select(date.getFullYear().toString())
+            cy.get('button').contains(date.getDate().toString()).click()
+          })
+        } else {
+          cy.get('@field').find('input[type="text"]').type(value)
+        }
+      })
+    } else {
+      it('Choosing an option', () => {
+        if (fieldType.type === 'select') {
+          cy.get('@field').find('.select-field-trigger').click()
+          this.chooseAnOption(predefinedOption || options[1])
+        }
+      })
+    }
+  }
 
   pipeline () {
     describe('Validate Standalone Home Screen', () => {
       const appName = this.getLocalizedValue(
         this.config.app.name
       )
-      const locale = this.getDefaultLanguageId().replace('_', '-')
+      const locale = this.getLanguageId().toLowerCase()
+
       it(`Should have [${appName}] on Standalone name`, () => {
         cy.get('.app-builder-standalone-name').contains(appName)
       })
@@ -111,9 +136,9 @@ class Standalone extends TestBase {
       })
     })
 
-    this.config.formView.fieldTypes.filter(({ config }) => config).forEach((fieldType, index) => {
-      describe(`Should validate all fields of ${fieldType.config.label}`, () => {
-        this._validateEntry(fieldType, index)
+    this.config.formView.fieldTypes.filter(({ config }) => config).forEach((fieldType) => {
+      describe(`Should validate all fields of ${this.getLocalizedValue(fieldType.config.label)}`, () => {
+        this._validateEntry(fieldType, this.getLanguageId())
       })
     })
 
@@ -125,7 +150,7 @@ class Standalone extends TestBase {
 
     describe('Validate Standalone Home Screen', () => {
       it('Table Values are fine', () => {
-        // this.validateListView();
+        // this.validateListView()
       })
     })
   }

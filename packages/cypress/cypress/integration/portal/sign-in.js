@@ -14,7 +14,7 @@ class SignIn extends TestBase {
       })
 
       afterEach(() => {
-        cy.wait(2000)
+        cy.wait(this.defaultTime)
       })
 
       it('should open portal and sign-in', () => {

@@ -8,6 +8,7 @@ class TestBase {
     this.selectors = selectors
     this.faker = faker
     this.pipelineConfig = config
+    this.defaultTime = 1000
   }
 
   preserve () {
@@ -110,9 +111,10 @@ class TestBase {
   }
 
   validateListView (name) {
-    const localizedValue = this.getLocalizedValue(name)
+    const localizedValue = this.getLocalizedPrefenceValue(name)
     const fakeCompany = this.faker.company.companyName()
-    cy.wait(1500)
+
+    cy.wait(this.defaultTime)
 
     cy.get('form input')
       .eq(0)
@@ -138,6 +140,30 @@ class TestBase {
     this.emptyState()
 
     cy.get('@section').find('button').click({ force: true })
+  }
+
+  chooseAnOption (value) {
+    cy.get('.dropdown-menu.show').within(() => {
+      cy.get('button').contains(value).click()
+    })
+  }
+
+  getFakeValueByType (type) {
+    switch (type) {
+      case 'text': {
+        return this.faker.system.fileName()
+      }
+      case 'date': {
+        // return '19/02/1996'
+        return this.faker.date.recent(3).toISOString()
+      }
+      case 'numeric': {
+        return this.faker.random.number(120)
+      }
+      default: {
+        return this.faker.address.city()
+      }
+    }
   }
 }
 

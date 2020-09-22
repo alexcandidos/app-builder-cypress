@@ -1,21 +1,14 @@
 /// <reference types="cypress" />
 
+const pipelines = require('../../helpers/pipelines')
 const TestBase = require('../../test.base')
 const FormView = require('../form-view/form-view')
-const signIn = require('../../portal/sign-in')
-const pipelines = require('../../helpers/pipelines')
 const TableView = require('../table-view/table-view')
 const Language = require('../../portal/language')
 const App = require('../app/app')
 const Standalone = require('../standalone/standalone')
 
 class AppBuilderObject extends TestBase {
-  constructor () {
-    super()
-    this.objectName = `Liferay Object ${new Date().getMilliseconds()}`.trim()
-    this.lastObject = null
-  }
-
   createAnObject (name, unCheck = false) {
     cy.get('.nav-item button.btn-primary').click()
 
@@ -37,7 +30,7 @@ class AppBuilderObject extends TestBase {
       })
     }
     cy.get('tbody tr').each((_, index) => {
-      cy.wait(2000)
+      cy.wait(this.defaultTime)
       deleteRow(index)
     })
   }
@@ -54,10 +47,6 @@ class AppBuilderObject extends TestBase {
     portalLanguage.normalizeLanguages()
 
     describe('Run Portal on Instance', () => {
-      xit('visit', () => {
-        cy.visit('http://localhost:8080/group/guest/~/control_panel/manage?p_p_id=com_liferay_app_builder_web_internal_portlet_ObjectsPortlet&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&p_p_auth=h219BBRV&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataDefinitionId=38884&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_dataLayoutId=38890&_com_liferay_app_builder_web_internal_portlet_ObjectsPortlet_mvcRenderCommandName=%2Fedit_form_view')
-      })
-
       it('Navigate to Object', () => {
         cy.visit(this.constants.modules.object)
       })
@@ -95,8 +84,6 @@ class AppBuilderObject extends TestBase {
   }
 
   test () {
-    // signIn.test()
-
     Object.keys(pipelines).forEach((key) => {
       const pipeline = pipelines[key]
 

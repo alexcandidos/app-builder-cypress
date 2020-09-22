@@ -82,10 +82,6 @@ class FormView extends TestBase {
       showLabel = true
     } = localizedConfig
 
-    it('Log myself', () => {
-      cy.log({ localizedConfig })
-    })
-
     const {
       ddmDisplayStyle,
       ddmInline,
@@ -102,6 +98,10 @@ class FormView extends TestBase {
     } = this.selectors
 
     const withAdvancedField = predefinedValue || showLabel || repeatable || inline || predefinedOptions
+
+    it('Log myself', () => {
+      cy.log({ localizedConfig })
+    })
 
     if (addField) {
       const fieldSelector = `[data-field-type-name="${type}"]`
@@ -199,9 +199,14 @@ class FormView extends TestBase {
     if (options && options.length) {
       it('Typing [options]', () => {
         cy.get(ddmOptions).within(() => {
-          cy.get('.ddm-field-options').should('have.length', 2)
+          cy.get('.ddm-field-options').should('have.length', addField ? 2 : options.length + 1)
           options.forEach((option, index) => {
-            cy.get('.ddm-field-options').eq(index).find('.form-group input').eq(0).clear().type(option)
+            cy.get('.ddm-field-options')
+              .eq(index)
+              .find('.form-group input')
+              .eq(0)
+              .clear()
+              .type(option)
           })
         })
       })
@@ -256,7 +261,9 @@ class FormView extends TestBase {
   title () {
     it('Verify if title is empty and fill value', () => {
       cy.get('.app-builder-upper-toolbar').within(() => {
-        cy.get('input').should('be.empty').type(`Liferay FormView ${this.faker.random.number()}`)
+        cy
+          .get('input').should('be.empty')
+          .type(`Liferay FormView ${this.faker.random.number()}`)
       })
     })
 
@@ -341,10 +348,6 @@ class FormView extends TestBase {
   }
 
   runPipeline () {
-    beforeEach(() => {
-      cy.wait(100)
-    })
-
     const name = this.config.formView.name
 
     // this.sidebarLeft()
