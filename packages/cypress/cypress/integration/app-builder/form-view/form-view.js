@@ -25,10 +25,10 @@ class FormView extends TestBase {
     } else {
       if (!fatherSelector) {
         it('log', () => {
-          cy.log(this.getLocalizedValue(parent.name))
+          cy.log(this.getLocalizedPrefenceValue(parent.name))
           cy.log(parent.name)
         })
-        this.setTitle(this.getLocalizedValue(parent.name))
+        this.setTitle(this.getLocalizedPrefenceValue(parent.name))
       }
       doAction = false
     }
@@ -64,8 +64,9 @@ class FormView extends TestBase {
 
   _fieldCompose (field, { addField, doAction, fatherSelector, languageId }) {
     const { type } = field
+    const localizedConfig = this.getLocalizedConfig(field.config, languageId)
     const {
-      addType = 'bottom',
+      dragType = 'dbClick',
       displayType,
       help,
       inline,
@@ -79,7 +80,11 @@ class FormView extends TestBase {
       required,
       showAsSwitcher,
       showLabel = true
-    } = this.getLocalizedConfig(field.config, languageId)
+    } = localizedConfig
+
+    it('Log myself', () => {
+      cy.log({ localizedConfig })
+    })
 
     const {
       ddmDisplayStyle,
@@ -100,13 +105,13 @@ class FormView extends TestBase {
 
     if (addField) {
       const fieldSelector = `[data-field-type-name="${type}"]`
-      if (addType === 'dbClick') {
+      if (dragType === 'dbClick') {
         it('Should add field on DataLayout using [dbClick]', () => {
           cy.get(fieldSelector).dblclick()
         })
       } else {
         it('Should add field on DataLayout using [drag-and-drop]', () => {
-          if (addType === 'top') {
+          if (dragType === 'dragTop') {
             cy.get('.ddm-target').first().as('target')
           } else {
             cy.get('.ddm-target').last().as('target')

@@ -55,18 +55,18 @@ class App extends TestBase {
     })
   }
 
-  pipeline (standaloneApp) {
+  pipeline () {
     it('Should open [App] Tab', () => {
       this.selectors.changeObjectTab(2)
     })
 
-    if (this.config.object.newObject) {
+    if (this.config.object) {
       it('Should contains an empty state', () => {
         this.emptyState()
       })
     }
 
-    if (this.config.app.newApp) {
+    if (this.config.app) {
       it('Click on Add App', () => {
         cy.get('.nav-item button.btn-primary').click()
       })
@@ -83,10 +83,10 @@ class App extends TestBase {
         this._validateCreatedItemInForm(this.config.tableView.name)
       })
 
-      const { options } = this.config.app
+      const { config } = this.config.app
 
-      it(`Should check options ${Object.keys(options).join(', ')}`, () => {
-        this._deployAs(options)
+      it(`Should check options ${Object.keys(config).join(', ')}`, () => {
+        this._deployAs(config)
       })
 
       let standaloneApp

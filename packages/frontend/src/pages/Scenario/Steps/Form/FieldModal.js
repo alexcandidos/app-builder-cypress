@@ -3,8 +3,20 @@ import { Col, Row } from '@clayui/layout'
 import React, { useContext, useEffect, useState } from 'react'
 
 import AppContext, { actions as Actions } from '../../../../AppContext'
-import { LocalizedInput, MultiInputSelection, Select, Toggle } from '../../../../components/Input'
+import { LocalizedInput, MultiLanguageOptions, Select, Toggle } from '../../../../components/Input'
 import Modal from '../../../../components/Modal'
+
+const addTypes = [{
+  label: 'Double Click',
+  value: 'dbClick'
+},
+{
+  label: 'Drag to Bottom',
+  value: 'dragBottom'
+}, {
+  label: 'Drag to Top',
+  value: 'dragTop'
+}]
 
 const FieldModal = ({
   editIndex, initialState, setVisible, visible
@@ -22,6 +34,7 @@ const FieldModal = ({
 
   useEffect(() => {
     if (initialState) {
+      console.log(initialState)
       setState(initialState)
     } else {
       setState(initialConfig)
@@ -52,7 +65,7 @@ const FieldModal = ({
   }
 
   const onToggle = (name) => {
-    onChange(name, !state[name])
+    onChange(name, !state.config[name])
   }
 
   const onSubmit = async () => {
@@ -94,13 +107,26 @@ const FieldModal = ({
       setVisible={setVisible}
       onSubmit={onSubmit}
     >
-      <Select
-        label="Field Type"
-        onChange={onOptionChange}
-        defaultValue={state.type}
-        name="type"
-        options={fieldTypeOptions}
-      />
+      <Row>
+        <Col>
+          <Select
+            label="Field Type"
+            onChange={onOptionChange}
+            defaultValue={state.type}
+            name="type"
+            options={fieldTypeOptions}
+          />
+        </Col>
+        <Col>
+          <Select
+            label="Add Type"
+            onChange={onOptionChange}
+            defaultValue={state.config.dragType}
+            name="dragType"
+            options={addTypes}
+          />
+        </Col>
+      </Row>
       <LocalizedInput
         name="label"
         onChange={onChange}
@@ -119,7 +145,7 @@ const FieldModal = ({
         defaultValue={state.config.placeholder}
         label="Placeholder"
       />
-      <b>Options</b>
+      <b>Field Type Options</b>
       <Row className="mt-4">
         {options
           .filter(({ type }) => type === 'boolean')
@@ -128,12 +154,18 @@ const FieldModal = ({
               <Toggle
                 label={label}
                 onToggle={() => onToggle(name)}
-                toggled={state[name]} />
+                toggled={state.config[name]} />
             </Col>
           ))}
       </Row>
+
       {['radio', 'select', 'checkbox_multiple'].includes(state.type) &&
-            <MultiInputSelection label="Options" />}
+          <MultiLanguageOptions
+            name="options"
+            onChange={onChange}
+            defaultValue={state.config.options}
+            label="Option"
+          />}
     </Modal>
   )
 }

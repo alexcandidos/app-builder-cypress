@@ -24,7 +24,7 @@ export default function index ({ actions, columns = [], items = [] }) {
                 <ClayTable.Cell
                   key={indexC}
                   headingTitle={indexC === 0 }>
-                  {column.render ? column.render(value) : (value || '-')}
+                  {column.render ? column.render(value, item) : (value || '-')}
                 </ClayTable.Cell>
               )
             })}

@@ -1,5 +1,5 @@
 import ClayButton from '@clayui/button'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -17,7 +17,7 @@ import StepTable from './Steps/Table'
 const Scenario = ({ history, match: { params } }) => {
   const [{ scenario }, dispatch] = useContext(AppContext)
   const [isValid, setValid] = useState(false)
-  const [step, setStep] = useState(3)
+  const [step, setStep] = useState(1)
   const { id } = params
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const Scenario = ({ history, match: { params } }) => {
     }
   ]
 
-  const stepIsValid = async () => {
+  const stepIsValid = useCallback(async () => {
     const { app, formView, object, settings, tableView } = scenario
     let value
     switch (step) {
@@ -95,11 +95,11 @@ const Scenario = ({ history, match: { params } }) => {
       }
     }
     setValid(value)
-  }
+  }, [scenario, step])
 
   useEffect(() => {
     stepIsValid()
-  }, [scenario])
+  }, [scenario, stepIsValid])
 
   const onSubmit = async (e) => {
     e.preventDefault()

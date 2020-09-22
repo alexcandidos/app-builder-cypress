@@ -6,6 +6,13 @@ class Language extends TestBase {
     this.config = config
   }
 
+  formatLanguage (language) {
+    if (language.includes('-')) {
+      return language.replace('-', '_')
+    }
+    return language
+  }
+
   normalizeLanguages () {
     const { en_US, pt_BR, zh_CN } = this.constants.languages
     const { defaultLanguageId = pt_BR.key, languageId = zh_CN.key } = this.config.settings
@@ -19,8 +26,8 @@ class Language extends TestBase {
       it('Change instance language', () => {
         cy
           .get(this.selectors.instanceLanguageSelect)
-          .select(defaultLanguageId)
-          .should('have.value', defaultLanguageId)
+          .select(this.formatLanguage(defaultLanguageId))
+          .should('have.value', this.formatLanguage(defaultLanguageId))
       })
 
       it(`Save instance language with ${defaultLanguageId}`, () => {
@@ -36,8 +43,8 @@ class Language extends TestBase {
       it('Change Portal Language', () => {
         cy
           .get(this.selectors.accountSettingsLanguageSelect)
-          .select(languageId)
-          .should('have.value', languageId)
+          .select(this.formatLanguage(languageId))
+          .should('have.value', this.formatLanguage(languageId))
       })
 
       it(`Save Portal Language with ${languageId}`, () => {

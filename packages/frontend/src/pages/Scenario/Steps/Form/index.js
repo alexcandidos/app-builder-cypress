@@ -7,6 +7,7 @@ import EmptyState from '../../../../components/EmptyState'
 import { LocalizedInput } from '../../../../components/Input'
 import Table from '../../../../components/Table'
 import FieldModal from './FieldModal'
+import { RenderKeys, renderLocalized } from './RenderKeys'
 
 const spritemap = require('@clayui/css/lib/images/icons/icons.svg')
 
@@ -15,29 +16,32 @@ const ObjectModule = () => {
   const [initialState, setInitialState] = useState()
   const [editIndex, setEditIndex] = useState()
   const [visible, setVisible] = useState(false)
-  const [state, setState] = useState(formView)
-
-  const renderChecked = (value) => value ? 'X' : '-'
-  const renderLocalized = (value) => typeof value === 'string' ? value : JSON.stringify(value)
 
   const columns = [
-    { key: 'type', value: 'Field Type' },
+    { key: 'name', value: 'Field Type' },
     { key: 'label', render: renderLocalized, value: 'Label' },
-    { key: 'predefinedValue', render: renderLocalized, value: 'Predefined Value' },
     { key: 'placeholder', render: renderLocalized, value: 'Placeholder' },
-    { key: 'repeatable', render: renderChecked, value: 'Repeatable' },
-    { key: 'inline', render: renderChecked, value: 'Inline' },
-    { key: 'multiple', render: renderChecked, value: 'Multiple' },
-    { key: 'showAsSwitcher', render: renderChecked, value: 'Show as Switcher' },
-    { key: 'showLabel', render: renderChecked, value: 'Show Label' }
+    { key: 'options', render: renderLocalized, value: 'Options' },
+    { key: 'predefinedValue', render: renderLocalized, value: 'Predefined Value' },
+    {
+      key: 'placeholder',
+      // eslint-disable-next-line react/display-name
+      render: (_, { originalItem: { config } }) => {
+        const configs = { ...config };
+        ['label', 'placeholder', 'predefinedValue', 'options'].forEach((key) => {
+          delete configs[key]
+        })
+        return <RenderKeys valueAsLabel configs={configs} />
+      },
+      value: 'Options'
+    }
   ]
 
   const onChange = (name, value) => {
     const newState = {
-      ...state,
+      ...formView,
       [name]: value
     }
-    setState(newState)
     dispatch({ payload: newState, type: Actions.SYNC_FORM_VIEW })
   }
 
@@ -96,13 +100,12 @@ const ObjectModule = () => {
             label="Name"
           />
 
-          {fieldTypes.length
-            ? <Table
-              actions={actions}
-              columns={columns}
-              items={fieldTypes} /> : <EmptyState>
-              <AddButton />
-            </EmptyState>
+          {fieldTypes.length ? <Table
+            actions={actions}
+            columns={columns}
+            items={fieldTypes} /> : <EmptyState>
+            <AddButton />
+          </EmptyState>
           }
 
           {(Boolean(fieldTypes.length)) && <AddButton />}

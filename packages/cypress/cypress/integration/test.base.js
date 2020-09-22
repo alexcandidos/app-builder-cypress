@@ -44,7 +44,7 @@ class TestBase {
     return name[this.getLanguageId()] || name[this.getDefaultLanguageId()] || untitled
   }
 
-  getLocalizedPrefenceValue (name, defaultLanguageId) {
+  getLocalizedPrefenceValue (name, defaultLanguageId = this.getDefaultLanguageId()) {
     if (name[defaultLanguageId]) {
       return name[defaultLanguageId]
     }
@@ -52,11 +52,11 @@ class TestBase {
   }
 
   getLanguageId () {
-    return this.pipelineConfig.settings.languageId || 'en_US'
+    return this.pipelineConfig.settings.languageId || 'en-US'
   }
 
   getDefaultLanguageId () {
-    return this.pipelineConfig.settings.defaultLanguageId || 'en_US'
+    return this.pipelineConfig.settings.defaultLanguageId || 'en-US'
   }
 
   emptyState () {
@@ -69,7 +69,9 @@ class TestBase {
     }
     Object.keys(config).forEach((key) => {
       const value = config[key]
-      if (typeof value === 'object') {
+      if (Array.isArray(value)) {
+        newConfigs[key] = value.map((localizedValue) => this.getLocalizedPrefenceValue(localizedValue, lang))
+      } else if (typeof value === 'object') {
         newConfigs[key] = this.getLocalizedPrefenceValue(value, lang)
       }
     })
@@ -109,6 +111,7 @@ class TestBase {
 
   validateListView (name) {
     const localizedValue = this.getLocalizedValue(name)
+    const fakeCompany = this.faker.company.companyName()
     cy.wait(1500)
 
     cy.get('form input')
@@ -127,10 +130,10 @@ class TestBase {
 
     cy.get('@input')
       .clear()
-      .type('Liferay {enter}')
-      .should('have.value', 'Liferay')
+      .type(`${fakeCompany} {enter}`)
+      .should('have.value', fakeCompany)
 
-    cy.get('@section').should('be.visible').contains('Liferay')
+    cy.get('@section').should('be.visible').contains(fakeCompany)
 
     this.emptyState()
 

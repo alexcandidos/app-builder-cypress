@@ -1,6 +1,14 @@
+import ClayButton from '@clayui/button'
 import ClayDatePicker from '@clayui/date-picker'
-import ClayForm, { ClayDualListBox, ClayInput, ClaySelectWithOption, ClayToggle } from '@clayui/form'
-import React, { useState } from 'react'
+import ClayForm, {
+  ClayDualListBox,
+  ClayInput,
+  ClaySelectWithOption,
+  ClayToggle
+} from '@clayui/form'
+import ClayIcon from '@clayui/icon'
+import { Col, Row } from '@clayui/layout'
+import React, { useEffect, useState } from 'react'
 
 import LocalizedInput from '../LocalizedInput'
 import MultiInput from '../MultiSelect'
@@ -66,7 +74,7 @@ const DualBox = ({ options, left, right, onChange = () => {} }) => {
   const [leftSelected, setLeftSelected] = useState([])
   const [rightSelected, setRightSelected] = useState([])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setItems(options)
   }, [options])
 
@@ -97,6 +105,68 @@ const DualBox = ({ options, left, right, onChange = () => {} }) => {
   )
 }
 
+const MultiLanguageOptions = ({ defaultValue = [{}], onChange, name, label }) => {
+  const [options, setOptions] = useState(defaultValue)
+
+  const onAddOption = () => {
+    const newOptions = [...options, {}]
+    setOptions(newOptions)
+    syncOnChange(newOptions)
+  }
+
+  const onRemoveOption = (index) => {
+    const newOptions = options.filter((_opt, optionIndex) => optionIndex !== index)
+    setOptions(newOptions)
+    syncOnChange(newOptions)
+  }
+
+  const onOptionChange = (value, index) => {
+    const newOptions = options.map((option, optionIndex) => {
+      if (optionIndex === index) {
+        return value
+      }
+      return option
+    })
+    setOptions(newOptions)
+    syncOnChange(newOptions)
+  }
+
+  const syncOnChange = (newOptions) => {
+    onChange(name, newOptions)
+  }
+
+  return (
+    <div>
+      {options.map((value, index) => (
+        <Row key={index}>
+          <Col lg={10}>
+            <LocalizedInput
+              name={name}
+              onChange={(_, value) => onOptionChange(value, index)}
+              label={`${label} ${index + 1}`}
+              defaultValue={value}
+            />
+          </Col>
+          <Col>
+            <ClayButton.Group className="mt-4">
+              {index !== 0 &&
+              <ClayButton
+                onClick={() => onRemoveOption(index)}
+                displayType="danger"
+                className="mr-2">
+                <ClayIcon spritemap={spritemap} symbol="times" />
+              </ClayButton>}
+              <ClayButton onClick={onAddOption}>
+                <ClayIcon spritemap={spritemap} symbol="plus" />
+              </ClayButton>
+            </ClayButton.Group>
+          </Col>
+        </Row>
+      ))}
+    </div>
+  )
+}
+
 export {
-  Input, LocalizedInput, Select, ClayDatePickerWithState, DualBox, MultiInputSelection, Toggle
+  Input, LocalizedInput, Select, ClayDatePickerWithState, DualBox, MultiInputSelection, Toggle, MultiLanguageOptions
 }
